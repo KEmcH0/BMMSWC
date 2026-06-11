@@ -1,58 +1,23 @@
-"use client";
+import fs from "fs";
+import path from "path";
 
-import { useState } from "react";
-import { X } from "lucide-react";
+import GalleryClient from "./GalleryClient";
 
-export default function Gallery() {
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
+export default function GalleryPage() {
+  const galleryDir = path.join(process.cwd(), "public", "gallery");
 
-  const images = Array.from({ length: 9 }).map((_, i) => ({
-    id: i,
-    url: `https://images.unsplash.com/photo-${1500000000000 + i * 1000000}?auto=format&fit=crop&q=80&w=800`
+  const imageFiles = fs.existsSync(galleryDir)
+    ? fs
+        .readdirSync(galleryDir)
+        .filter((fileName) => /\.(jpe?g|png|webp|gif|avif)$/i.test(fileName))
+        .sort((a, b) => a.localeCompare(b))
+    : [];
+
+  const images = imageFiles.map((fileName, index) => ({
+    id: index + 1,
+    url: `/gallery/${fileName}`,
+    alt: `BMMSWC gallery photo ${index + 1}`,
   }));
 
-  return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-primary mb-4">Photo Gallery</h1>
-        <div className="w-24 h-1 bg-secondary mx-auto rounded-full mb-6" />
-        <p className="opacity-80 max-w-2xl mx-auto">
-          Capturing the beautiful moments of our community events.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images.map((img) => (
-          <div
-            key={img.id}
-            className="aspect-square bg-muted rounded-xl overflow-hidden cursor-pointer group"
-            onClick={() => setSelectedImg(img.url)}
-          >
-            <img
-              src={img.url}
-              alt="Gallery"
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
-
-      {selectedImg && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm">
-          <button
-            onClick={() => setSelectedImg(null)}
-            className="absolute top-6 right-6 text-white hover:text-secondary bg-black/50 rounded-full p-2"
-          >
-            <X className="w-8 h-8" />
-          </button>
-          <img
-            src={selectedImg}
-            alt="Expanded view"
-            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-          />
-        </div>
-      )}
-    </div>
-  );
+  return <GalleryClient images={images} />;
 }

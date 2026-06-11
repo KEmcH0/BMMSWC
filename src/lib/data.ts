@@ -16,6 +16,7 @@ export const advisors = [
   { id: 8, name: "Dr.  Nazrul Islam", designation: "Advisor", photo: "/advisors/images/nazrul.jpeg", bio: "Consultant(Medicine), MAG OSMANI MEDICAL COLLEGE HOSPITAL, SYLHET", achievements: "Tech Leader of the Year 2018" },
   { id: 9, name: "Md. Shahab Uddin", designation: "Advisor", photo: "/advisors/images/shahabuddin.jpeg", bio: "Senior Teacher, Ali Amzad Goverment Girls High School." },
   { id: 10, name: "Dr. Husne Ara Begum Sopna", designation: "Advisor", photo: "/advisors/images/sopna.jpeg", bio: "Register, 34 BCS"},
+  { id: 11, name: "Tajul Islam", designation: "Advisor", photo: "/advisors/images/tajul.jpg", bio: "Master 1st year, Shahjalal University of Science and Technology, Sylhet"},
   
 ];
 

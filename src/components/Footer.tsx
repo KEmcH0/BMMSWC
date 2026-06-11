@@ -43,11 +43,11 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3 text-white/80">
                 <MapPin className="w-5 h-5 mt-0.5 text-secondary" />
-                <span>Sylhet, Bangladesh</span>
+                <span>AdampurBazar, Moulvibazar</span>
               </li>
               <li className="flex items-center space-x-3 text-white/80">
                 <Phone className="w-5 h-5 text-secondary" />
-                <span>+880 1234-567890</span>
+                <span>+880 1942357476</span>
               </li>
               <li className="flex items-center space-x-3 text-white/80">
                 <Mail className="w-5 h-5 text-secondary" />
@@ -55,14 +55,11 @@ export default function Footer() {
               </li>
             </ul>
             <div className="flex space-x-4 mt-6">
-              <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
+              <Link href="https://www.facebook.com/BMMCKP" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
                 <FaFacebook className="w-5 h-5" />
               </Link>
               <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
                 <FaTwitter className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
-                <FaInstagram className="w-5 h-5" />
               </Link>
             </div>
           </div>

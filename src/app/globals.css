@@ -29,3 +29,37 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
 }
+
+.gallery-card {
+  animation: floatIn 0.7s ease both;
+}
+
+.gallery-card:nth-child(2) { animation-delay: 0.1s; }
+.gallery-card:nth-child(3) { animation-delay: 0.2s; }
+
+.gallery-photo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 40%, rgba(255,255,255,0.08));
+  pointer-events: none;
+}
+
+.gallery-photo {
+  transform: scale(1.02);
+}
+
+.gallery-card:hover .gallery-photo {
+  transform: scale(1.08);
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

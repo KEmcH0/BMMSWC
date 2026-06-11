@@ -5,27 +5,27 @@ export default function News() {
   const newsItems = [
     {
       id: 1,
-      title: "Annual Scholarship Distribution 2024",
-      date: "August 15, 2024",
+      title: "Meritorious Student Reception",
+      date: "December 2, 2025",
       category: "Education",
-      desc: "Providing financial support to meritorious students from the community to help them achieve their dreams.",
-      img: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop"
+      desc: "Hard work, resilience, and pure dedication—all under one roof today! We are incredibly proud to host the Meritorious Student Reception and Prize Giving Ceremony to honor our top achievers.",
+      img: "news/images/songbordhona.jpg"
     },
     {
       id: 2,
-      title: "Career Counseling Seminar",
-      date: "September 10, 2024",
+      title: "Higher Studies Seminar 2025",
+      date: "Octobar 3, 2025",
       category: "Workshop",
-      desc: "A highly informative session for university students regarding job market trends and skill development.",
-      img: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop"
+      desc: "Charting the path to global success at the Higher Studies Seminar 2025! This event brings together ambitious minds to explore academic pathways, scholarship opportunities, and career-defining choices. Your journey to the world's top universities begins right here!",
+      img: "news/images/seminar.jpeg"
     },
     {
       id: 3,
-      title: "Winter Clothes Distribution",
-      date: "December 5, 2024",
-      category: "Community Service",
-      desc: "Distributed winter clothes among poor families in rural areas of Sylhet.",
-      img: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop"
+      title: "BMMSWC Merit Test–2025",
+      date: "December 25, 2025",
+      category: "Education",
+      desc: "Out of more than 200 exceptional students who participated in the BMMSWC Merit Test–2025, today we honor the best of the best. Congratulations to our meritorious achievers on this well-deserved success!",
+      img: "news/images/exam.jpg"
     }
   ];
 
@@ -62,9 +62,6 @@ export default function News() {
               <p className="opacity-80 mb-6 line-clamp-3 text-sm">
                 {item.desc}
               </p>
-              <Link href={`/news/${item.id}`} className="text-primary font-bold flex items-center hover:text-secondary transition-colors mt-auto w-fit">
-                Read More <ArrowRight className="w-4 h-4 ml-1" />
-              </Link>
             </div>
           </div>
         ))}
