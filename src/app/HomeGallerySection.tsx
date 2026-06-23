@@ -32,6 +32,7 @@ export default function HomeGallerySection({ galleryImages }: { galleryImages: s
     };
 
     updateCards();
+    // eslint-disable-next-line prefer-const
     intervalId = window.setInterval(updateCards, 3500);
 
     return () => {

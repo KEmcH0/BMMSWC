@@ -124,7 +124,7 @@ export function Gallery({ images }: GalleryProps) {
             </h1>
             <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6" />
             <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Capturing beautiful moments and celebrating our community's journey
+              Capturing beautiful moments and celebrating our community&apos;s journey
             </p>
           </motion.div>
 
@@ -240,7 +240,7 @@ export function Gallery({ images }: GalleryProps) {
                   animate={{ opacity: 1 }}
                   className="text-center mt-12 text-sm text-slate-500 dark:text-slate-400"
                 >
-                  You've reached the end of the gallery
+                  You&apos;ve reached the end of the gallery
                 </motion.p>
               )}
             </>
