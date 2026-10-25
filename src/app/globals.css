@@ -6,6 +6,8 @@
   --foreground: #0f172a;
   --primary: #15803d;
   --secondary: #d4af37;
+  --card: #ffffff;
+  --muted: #f1f5f9;
 }
 
 .dark {
@@ -13,6 +15,8 @@
   --foreground: #f8fafc;
   --primary: #166534;
   --secondary: #b48512;
+  --card: #1e293b;
+  --muted: #1e293b;
 }
 
 @theme inline {
@@ -20,6 +24,8 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

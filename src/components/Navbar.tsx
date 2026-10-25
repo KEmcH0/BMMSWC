@@ -22,30 +22,6 @@ export default function Navbar() {
 
   return (
     <>
-      <style>{`
-        @keyframes gradientCycle {
-          0%, 100% {
-            color: #059669;
-            text-shadow: 0 0 10px rgba(5, 150, 105, 0.6), 0 0 20px rgba(5, 150, 105, 0.3);
-          }
-          25% {
-            color: #10b981;
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.6), 0 0 25px rgba(16, 185, 129, 0.3);
-          }
-          50% {
-            color: #fbbf24;
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.8), 0 0 30px rgba(251, 191, 36, 0.5);
-          }
-          75% {
-            color: #10b981;
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.6), 0 0 25px rgba(16, 185, 129, 0.3);
-          }
-        }
-
-        .gradient-cycle {
-          animation: gradientCycle 4s ease-in-out infinite;
-        }
-      `}</style>
       <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-2">
@@ -56,7 +32,7 @@ export default function Navbar() {
               height={40}
               className="rounded-full"
             />
-            <span className="font-bold text-2xl gradient-cycle">BMMSWC</span>
+            <span className="font-bold text-2xl text-primary">BMMSWC</span>
           </Link>
 
           {/* Desktop Nav */}

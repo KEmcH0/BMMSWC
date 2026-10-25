@@ -18,18 +18,16 @@ export default function AdminCommittee() {
               <tr>
                 <th className="text-left p-4">Name</th>
                 <th className="text-left p-4">Position</th>
-                <th className="text-left p-4">Profile</th>
               </tr>
             </thead>
             <tbody>
               {committeeMembers.length === 0 ? (
-                <tr><td colSpan={3} className="p-4 text-center">No members yet</td></tr>
+                <tr><td colSpan={2} className="p-4 text-center">No members yet</td></tr>
               ) : (
                 committeeMembers.map(member => (
                   <tr key={member.id} className="border-b hover:bg-muted/50">
                     <td className="p-4">{member.name}</td>
                     <td className="p-4">{member.position}</td>
-                    <td className="p-4 text-sm">{member.profile || '–'}</td>
                   </tr>
                 ))
               )}

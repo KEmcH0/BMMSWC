@@ -2,9 +2,48 @@ import fs from "fs";
 import path from "path";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  HandHeart,
+  Landmark,
+  Mail,
+  Phone,
+} from "lucide-react";
+import { FaFacebook } from "react-icons/fa";
 
 import HomeGallerySection from "./HomeGallerySection";
+import NewsCard from "@/components/NewsCard";
+import { advisors, committeeMembers } from "@/lib/data";
+import { newsItems } from "@/lib/news";
+
+const FOUNDED = 1985;
+
+const programs = [
+  {
+    icon: GraduationCap,
+    title: "Higher Education",
+    desc: "Promoting higher education among community students through merit tests, seminars and guidance.",
+  },
+  {
+    icon: HandHeart,
+    title: "Financial Assistance",
+    desc: "Supporting underprivileged meritorious students so that no talent is left behind.",
+  },
+  {
+    icon: BookOpen,
+    title: "Skills & Career",
+    desc: "Skill development workshops and career counseling for students and young graduates.",
+  },
+  {
+    icon: Landmark,
+    title: "Culture & Heritage",
+    desc: "Preserving and promoting the rich cultural heritage of Manipuri Muslims.",
+  },
+];
+
+const leaderPositions = ["President", "General Secretary"];
 
 export default function Home() {
   const galleryDir = path.join(process.cwd(), "public", "gallery");
@@ -15,6 +54,17 @@ export default function Home() {
         .filter((fileName) => /\.(jpe?g|png|webp|gif|avif)$/i.test(fileName))
         .map((fileName) => `/gallery/${fileName}`)
     : [];
+
+  const stats = [
+    { value: `${new Date().getFullYear() - FOUNDED}+`, label: "Years of Service" },
+    { value: "200+", label: "Merit Test 2025 Participants" },
+    { value: `${committeeMembers.length}`, label: "Committee Members" },
+    { value: `${advisors.length}`, label: "Advisors" },
+  ];
+
+  const leaders = leaderPositions.flatMap((p) => committeeMembers.filter((m) => m.position === p));
+  const latestNews = newsItems.slice(0, 3);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -22,7 +72,7 @@ export default function Home() {
         <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" />
         <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
           <div className="inline-block p-4 bg-white/10 rounded-full mb-6 backdrop-blur-sm">
-            <span className="text-secondary font-bold tracking-wider">EST. 1985</span>
+            <span className="text-secondary font-bold tracking-wider">EST. {FOUNDED}</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 max-w-4xl leading-tight">
             Bangladesh Manipuri Muslim <br className="hidden md:block" />
@@ -38,12 +88,137 @@ export default function Home() {
             >
               Learn More <ArrowRight className="w-5 h-5" />
             </Link>
+            <Link
+              href="/news"
+              className="px-8 py-3 border-2 border-white/70 text-white font-semibold rounded-full hover:bg-white/10 transition-all flex items-center justify-center"
+            >
+              Latest News
+            </Link>
           </div>
         </div>
       </section>
 
+      {/* Stats */}
+      <section className="container mx-auto px-4 -mt-10 relative z-20">
+        <div className="grid grid-cols-2 lg:grid-cols-4 bg-card border rounded-2xl shadow-lg divide-x divide-y lg:divide-y-0 overflow-hidden">
+          {stats.map((s) => (
+            <div key={s.label} className="p-6 text-center">
+              <div className="text-3xl md:text-4xl font-bold text-primary">{s.value}</div>
+              <div className="text-sm opacity-70 mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* What we do */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-primary mb-4">What We Do</h2>
+            <div className="w-24 h-1 bg-secondary mx-auto rounded-full" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {programs.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-card border rounded-2xl p-6 hover:shadow-md hover:border-secondary/50 transition-all">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4">
+                  <Icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">{title}</h3>
+                <p className="text-sm opacity-75 leading-relaxed">{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest News */}
+      {latestNews.length > 0 && (
+        <section className="py-20 bg-primary/5">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+              <div>
+                <h2 className="text-3xl font-bold text-primary mb-4">Latest News & Events</h2>
+                <div className="w-24 h-1 bg-secondary rounded-full" />
+              </div>
+              <Link href="/news" className="text-primary font-semibold flex items-center gap-1 hover:underline">
+                View all <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {latestNews.map((item) => (
+                <NewsCard key={item.slug} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Leadership */}
+      {leaders.length > 0 && (
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-primary mb-4">Our Leadership</h2>
+              <div className="w-24 h-1 bg-secondary mx-auto rounded-full" />
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center gap-10 mb-10">
+              {leaders.map((m) => (
+                <div key={m.id} className="flex flex-col items-center text-center">
+                  <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-secondary mb-4 shadow-sm">
+                    <img src={m.photo} alt={m.name} className="w-full h-full object-cover" />
+                  </div>
+                  <h3 className="text-xl font-bold text-primary">{m.name}</h3>
+                  <p className="text-secondary font-medium">{m.position}</p>
+                </div>
+              ))}
+            </div>
+            <div className="text-center">
+              <Link
+                href="/committee"
+                className="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-semibold rounded-full hover:bg-primary hover:text-white transition-colors"
+              >
+                Meet the Full Committee <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       <HomeGallerySection galleryImages={galleryImages} />
+
+      {/* Call to action */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="bg-primary text-white rounded-3xl p-10 md:p-14 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Be Part of Our Journey</h2>
+            <p className="text-white/85 max-w-2xl mx-auto mb-8">
+              Join our programs, support a student, or simply stay connected with the community.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <a
+                href="https://www.facebook.com/BMMCKP"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 bg-secondary text-primary-foreground font-semibold rounded-full hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
+              >
+                <FaFacebook className="w-5 h-5" /> Follow on Facebook
+              </a>
+              <a
+                href="tel:+8801942357476"
+                className="px-6 py-3 border-2 border-white/70 font-semibold rounded-full hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+              >
+                <Phone className="w-5 h-5" /> Call Us
+              </a>
+              <a
+                href="mailto:contact@bmmswc.org"
+                className="px-6 py-3 border-2 border-white/70 font-semibold rounded-full hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+              >
+                <Mail className="w-5 h-5" /> Email Us
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

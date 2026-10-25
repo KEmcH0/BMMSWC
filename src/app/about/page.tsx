@@ -8,7 +8,7 @@ export default function About() {
           <section>
             <h2 className="text-2xl font-semibold mb-4 text-secondary">Our History</h2>
             <p className="text-lg opacity-80 leading-relaxed">
-              Founded in the early 1985s, Bangladesh Manipuri Muslim Student Welfare Community (BMMSWC) started as a small initiative to connect Manipuri Muslim students studying across Bangladesh. Today, it has grown into a strong community dedicated to educational advancement and social welfare.
+              Founded in 1985, Bangladesh Manipuri Muslim Student Welfare Community (BMMSWC) started as a small initiative to connect Manipuri Muslim students studying across Bangladesh. Today, it has grown into a strong community dedicated to educational advancement and social welfare.
             </p>
           </section>
 

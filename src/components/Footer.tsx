@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaFacebook } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -50,11 +50,8 @@ export default function Footer() {
               </li>
             </ul>
             <div className="flex space-x-4 mt-6">
-              <Link href="https://www.facebook.com/BMMCKP" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
+              <Link href="https://www.facebook.com/BMMCKP" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
                 <FaFacebook className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
-                <FaTwitter className="w-5 h-5" />
               </Link>
             </div>
           </div>
