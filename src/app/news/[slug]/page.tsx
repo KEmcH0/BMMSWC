@@ -49,7 +49,7 @@ export default async function NewsDetail({ params }: Props) {
           </span>
         </div>
 
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-8 leading-tight">{item.title}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-primary dark:text-white mb-8 leading-tight">{item.title}</h1>
 
         {item.image_url && (
           <div className="rounded-2xl overflow-hidden mb-8 bg-muted">
@@ -66,7 +66,7 @@ export default async function NewsDetail({ params }: Props) {
 
       {more.length > 0 && (
         <section className="max-w-6xl mx-auto mt-20">
-          <h2 className="text-2xl font-bold text-primary mb-8">More News</h2>
+          <h2 className="text-2xl font-bold text-primary dark:text-white mb-8">More News</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {more.map((n) => (
               <NewsCard key={n.id} item={n} />

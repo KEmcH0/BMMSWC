@@ -1,71 +1,92 @@
 @import "tailwindcss";
 @custom-variant dark (&:is(.dark *));
 
+/* Brand: deep navy + warm gold on a soft ivory background. */
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --primary: #15803d;
-  --secondary: #d4af37;
+  --background: #f8f7f4;
+  --foreground: #14213a;
+  --primary: #0f2747;
+  --primary-dark: #0a1b33;
+  --secondary: #c9a24b;
   --card: #ffffff;
-  --muted: #f1f5f9;
+  --muted: #f0eee9;
+  --muted-foreground: #5b6474;
+  --border: #e5e1d8;
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --primary: #166534;
-  --secondary: #b48512;
-  --card: #1e293b;
-  --muted: #1e293b;
+  --background: #0a1424;
+  --foreground: #e7ebf2;
+  --primary: #3d6bb3;
+  --primary-dark: #07101e;
+  --secondary: #d6b25e;
+  --card: #111e33;
+  --muted: #16243c;
+  --muted-foreground: #9aa6b8;
+  --border: #22324d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
   --color-secondary: var(--secondary);
   --color-card: var(--card);
   --color-muted: var(--muted);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  h1,
+  h2 {
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--secondary) 35%, transparent);
+  }
 }
 
-.gallery-card {
-  animation: floatIn 0.7s ease both;
+/* Thin gold rule used under eyebrow labels. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--secondary);
 }
 
-.gallery-card:nth-child(2) { animation-delay: 0.1s; }
-.gallery-card:nth-child(3) { animation-delay: 0.2s; }
-
-.gallery-photo-wrap::after {
+.eyebrow::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.12), transparent 40%, rgba(255,255,255,0.08));
-  pointer-events: none;
+  width: 1.75rem;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
 }
 
-.gallery-photo {
-  transform: scale(1.02);
-}
-
-.gallery-card:hover .gallery-photo {
-  transform: scale(1.08);
-}
-
-@keyframes floatIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Subtle diagonal pattern for navy bands. */
+.pattern-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
 }

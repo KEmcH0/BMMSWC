@@ -48,7 +48,7 @@ function TopperCard({ r }: { r: ExamResult }) {
           {place.label}
         </span>
       </div>
-      <h3 className="text-lg font-bold text-primary mt-2">{r.name}</h3>
+      <h3 className="text-lg font-bold text-primary dark:text-white mt-2">{r.name}</h3>
       {r.school && <p className="text-sm opacity-75">{r.school}</p>}
       {r.marks !== null && (
         <p className="mt-3 text-2xl font-bold">
@@ -93,7 +93,7 @@ export default async function ExamResult({ params, searchParams }: Props) {
         </Link>
 
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">{exam.title}</h1>
+          <h1 className="font-display text-3xl md:text-5xl font-semibold text-primary dark:text-white mb-3">{exam.title}</h1>
           {exam.exam_date && <p className="text-secondary font-medium">{formatDate(exam.exam_date)}</p>}
           {exam.description && <p className="opacity-80 mt-4 max-w-2xl mx-auto whitespace-pre-line">{exam.description}</p>}
         </div>
@@ -108,7 +108,7 @@ export default async function ExamResult({ params, searchParams }: Props) {
             <section key={cls}>
               <div className="flex items-center gap-4 mb-10">
                 <div className="h-px flex-1 bg-secondary/30" />
-                <h2 className="text-2xl font-bold text-primary flex items-center gap-2 whitespace-nowrap">
+                <h2 className="text-2xl font-bold text-primary dark:text-white flex items-center gap-2 whitespace-nowrap">
                   <Trophy className="w-6 h-6 text-secondary" /> Class {cls}
                 </h2>
                 <div className="h-px flex-1 bg-secondary/30" />

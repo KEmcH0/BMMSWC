@@ -1,4 +1,5 @@
 import { Gallery } from "@/components/Gallery";
+import PageHeader from "@/components/PageHeader";
 import { getGallery } from "@/lib/db";
 import type { GalleryImage } from "@/lib/galleryData";
 
@@ -23,5 +24,14 @@ export default async function GalleryPage() {
     featured: index === 0,
   }));
 
-  return <Gallery images={galleryImages} />;
+  return (
+    <>
+      <PageHeader
+        eyebrow="Gallery"
+        title="Moments from our programs"
+        description="Capturing the moments and milestones of our community's journey."
+      />
+      <Gallery images={galleryImages} />
+    </>
+  );
 }

@@ -104,29 +104,15 @@ export function Gallery({ images }: GalleryProps) {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900 transition-colors duration-300">
+    <div className="relative min-h-screen">
       {/* Header Section */}
       <motion.section
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="pt-12 md:pt-20 pb-8 md:pb-12 px-4"
+        className="pt-10 pb-8 px-4"
       >
         <div className="container mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
-              Our Gallery
-            </h1>
-            <div className="w-24 h-1.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mb-6" />
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-              Capturing beautiful moments and celebrating our community&apos;s journey
-            </p>
-          </motion.div>
 
           {/* Search and Filters */}
           <motion.div
@@ -144,13 +130,13 @@ export function Gallery({ images }: GalleryProps) {
                   placeholder="Search photos..."
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="w-full pl-12 pr-12 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+                  className="w-full pl-12 pr-12 py-3 rounded-xl border border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
                   aria-label="Search gallery"
                 />
                 {searchQuery && (
                   <button
                     onClick={clearSearch}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-lg transition-colors"
                     aria-label="Clear search"
                   >
                     <X className="w-4 h-4 text-slate-400" />
@@ -163,7 +149,7 @@ export function Gallery({ images }: GalleryProps) {
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center text-sm text-slate-500 dark:text-slate-400"
+              className="text-center text-sm text-muted-foreground"
             >
               Showing {displayedImages.length} of {filteredImages.length} photos
             </motion.p>
@@ -180,7 +166,7 @@ export function Gallery({ images }: GalleryProps) {
               animate={{ opacity: 1, y: 0 }}
               className="py-20 text-center"
             >
-              <p className="text-lg text-slate-500 dark:text-slate-400">
+              <p className="text-lg text-muted-foreground">
                 No photos found. Try adjusting your search or filters.
               </p>
             </motion.div>
@@ -227,7 +213,7 @@ export function Gallery({ images }: GalleryProps) {
                           repeat: Infinity,
                           delay: i * 0.1,
                         }}
-                        className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
+                        className="w-3 h-3 rounded-full bg-secondary"
                       />
                     ))}
                   </motion.div>
@@ -238,7 +224,7 @@ export function Gallery({ images }: GalleryProps) {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center mt-12 text-sm text-slate-500 dark:text-slate-400"
+                  className="text-center mt-12 text-sm text-muted-foreground"
                 >
                   You&apos;ve reached the end of the gallery
                 </motion.p>

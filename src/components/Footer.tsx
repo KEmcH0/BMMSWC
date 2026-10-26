@@ -1,67 +1,92 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebookF } from "react-icons/fa";
 import { site } from "@/lib/site";
 
-const quickLinks = [
-  { name: "About Us", href: "/about" },
-  { name: "Current Committee", href: "/committee" },
-  { name: "Advisors", href: "/advisors" },
-  { name: "News & Events", href: "/news" },
-  { name: "Exam Results", href: "/results" },
-  { name: "Gallery", href: "/gallery" },
-  { name: "Contact Us", href: "/contact" },
+const columns = [
+  {
+    title: "Organization",
+    links: [
+      { name: "About Us", href: "/about" },
+      { name: "Executive Committee", href: "/committee" },
+      { name: "Advisors", href: "/advisors" },
+      { name: "Alumni", href: "/alumni" },
+    ],
+  },
+  {
+    title: "Activities",
+    links: [
+      { name: "News & Events", href: "/news" },
+      { name: "Exam Results", href: "/results" },
+      { name: "Photo Gallery", href: "/gallery" },
+      { name: "Contact Us", href: "/contact" },
+    ],
+  },
 ];
 
 export default function Footer() {
   return (
-    <footer className="bg-primary text-primary-foreground mt-auto">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="relative bg-primary-dark text-white mt-auto overflow-hidden">
+      <div className="absolute inset-0 pattern-grid opacity-60" aria-hidden />
+      <div className="container relative mx-auto px-4 pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
           <div>
-            <h3 className="text-xl font-bold mb-4 text-white">BMMSWC</h3>
-            <p className="text-white/80 max-w-sm">
-              Bangladesh Manipuri Muslim Student Welfare Community. Working for the educational and social welfare of the community.
+            <Link href="/" className="flex items-center gap-3 mb-5">
+              <Image src="/logo.png" alt="" width={48} height={48} className="rounded-full bg-white p-0.5" />
+              <span className="font-display text-2xl font-semibold">{site.name}</span>
+            </Link>
+            <p className="text-white/65 leading-relaxed max-w-sm">
+              {site.fullName}. Working for the educational and social welfare of the community since {site.founded}.
             </p>
+            <a
+              href={site.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="mt-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-secondary hover:text-primary-dark transition-colors"
+            >
+              <FaFacebookF className="h-4 w-4" />
+            </a>
           </div>
+
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-secondary mb-5">{col.title}</h3>
+              <ul className="space-y-3">
+                {col.links.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+
           <div>
-            <h3 className="text-lg font-bold mb-4 text-white">Quick Links</h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-white/80 hover:text-secondary transition-colors">
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-white">Contact Info</h3>
-            <ul className="space-y-4">
-              <li className="flex items-start space-x-3 text-white/80">
-                <MapPin className="w-5 h-5 mt-0.5 text-secondary" />
+            <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-secondary mb-5">Get in Touch</h3>
+            <ul className="space-y-4 text-white/70">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 mt-0.5 shrink-0 text-secondary" />
                 <span>{site.address}</span>
               </li>
-              <li className="flex items-center space-x-3 text-white/80">
-                <Phone className="w-5 h-5 text-secondary" />
-                <a href={site.phoneHref} className="hover:text-secondary transition-colors">{site.phone}</a>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 shrink-0 text-secondary" />
+                <a href={site.phoneHref} className="hover:text-white transition-colors">{site.phone}</a>
               </li>
-              <li className="flex items-center space-x-3 text-white/80">
-                <Mail className="w-5 h-5 text-secondary" />
-                <a href={`mailto:${site.email}`} className="hover:text-secondary transition-colors">{site.email}</a>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 shrink-0 text-secondary" />
+                <a href={`mailto:${site.email}`} className="hover:text-white transition-colors break-all">{site.email}</a>
               </li>
             </ul>
-            <div className="flex space-x-4 mt-6">
-              <Link href={site.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
-                <FaFacebook className="w-5 h-5" />
-              </Link>
-            </div>
           </div>
         </div>
-        <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-          <p>&copy; {new Date().getFullYear()} BMMSWC. All rights reserved.</p>
-          <p>Developed By Fahmid Hasan</p>
+
+        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-2 text-sm text-white/50">
+          <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+          <p>Developed by Fahmid Hasan</p>
         </div>
       </div>
     </footer>
