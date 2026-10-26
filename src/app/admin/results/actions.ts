@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getExamById, getResults } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, text, uploadImage } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, text, uploadImage, uploadPdf } from "@/lib/admin";
 import { normalizeClass, parseResultsCSV } from "@/lib/csv";
 import { slugify } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
@@ -31,13 +31,27 @@ export async function saveExam(_prev: string | null, formData: FormData) {
 
   let examId = id;
   try {
+    // Official result PDF: replace it when a new file is chosen, or clear it when "remove" is ticked.
+    const oldPdf = id ? ((await getExamById(id))?.pdf_url ?? "") : "";
+    const pdf = formData.get("pdf");
+    let pdf_url: string | undefined;
+    if (isUpload(pdf)) pdf_url = await uploadPdf(pdf, "results");
+    else if (formData.get("remove_pdf") === "on") pdf_url = "";
+
     if (id) {
-      const { error } = await supabase().from("exams").update(fields).eq("id", id);
-      if (error) return error.message;
+      const { error } = await supabase()
+        .from("exams")
+        .update(pdf_url === undefined ? fields : { ...fields, pdf_url })
+        .eq("id", id);
+      if (error) {
+        if (pdf_url) await removeImage(pdf_url);
+        return error.message;
+      }
+      if (pdf_url !== undefined) await removeImage(oldPdf);
     } else {
       const { data, error } = await supabase()
         .from("exams")
-        .insert({ ...fields, slug: await uniqueSlug(title) })
+        .insert({ ...fields, ...(pdf_url ? { pdf_url } : {}), slug: await uniqueSlug(title) })
         .select("id")
         .single();
       if (error) return error.message;

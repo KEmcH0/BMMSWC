@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, ExternalLink, GraduationCap, Images, LogOut, Newspaper, Plus, UserRound, Users } from "lucide-react";
+import { Award, Download, ExternalLink, GraduationCap, House, Images, LogOut, Newspaper, Plus, UserRound, Users } from "lucide-react";
 import { countPeople, getAlbums, getExams, getNews } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { logout } from "./actions";
@@ -22,6 +22,7 @@ export default async function AdminPage() {
     { title: "Committee", href: "/admin/committee", icon: Users, count: `${committee} members` },
     { title: "Advisors", href: "/admin/advisors", icon: UserRound, count: `${advisors} advisors` },
     { title: "Alumni", href: "/admin/alumni", icon: GraduationCap, count: `${alumni} alumni`, note: "Hidden from the menu for now" },
+    { title: "Homepage", href: "/admin/homepage", icon: House, count: "Top image" },
   ];
 
   return (
@@ -98,7 +99,20 @@ export default async function AdminPage() {
           </div>
 
           <div className="bg-card border rounded-2xl p-6">
-            <h2 className="font-semibold mb-4">Tips</h2>
+            <h2 className="font-semibold mb-2">Backup</h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Download all website data (members, news, results, album lists) as one file. Do this about once a month and
+              keep the file safe.
+            </p>
+            {/* A plain link: the backup is a file download, not a page. */}
+            <a
+              href="/admin/backup"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary/90"
+            >
+              <Download className="w-4 h-4" /> Download backup
+            </a>
+
+            <h2 className="font-semibold mt-8 mb-4">Tips</h2>
             <ul className="text-sm text-muted-foreground list-disc ml-5 space-y-2">
               <li>Photos are resized automatically before upload, so you can pick them straight from your phone.</li>
               <li>Results stay hidden until you tick “Published” on the exam.</li>

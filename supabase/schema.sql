@@ -61,6 +61,7 @@ create table if not exists exams (
   title text not null,
   description text not null default '',
   exam_date date,
+  pdf_url text not null default '',    -- official result PDF, optional
   published boolean not null default false,
   created_at timestamptz not null default now()
 );
@@ -82,12 +83,19 @@ create table if not exists exam_results (
 );
 create index if not exists exam_results_merit on exam_results (exam_id, merit_position);
 
+-- Small site-wide settings edited from the admin, e.g. key 'hero_image'.
+create table if not exists settings (
+  key text primary key,
+  value text not null default ''
+);
+
 alter table people enable row level security;
 alter table news enable row level security;
 alter table albums enable row level security;
 alter table gallery enable row level security;
 alter table exams enable row level security;
 alter table exam_results enable row level security;
+alter table settings enable row level security;
 
 -- Public bucket for uploaded photos (anyone can view, only the server can upload).
 insert into storage.buckets (id, name, public)

@@ -21,7 +21,17 @@ export function isUpload(value: FormDataEntryValue | null): value is File {
 export async function uploadImage(file: File, folder: string) {
   if (!ALLOWED_TYPES.includes(file.type)) throw new Error("Only JPG, PNG, WebP, GIF or AVIF images are allowed.");
   if (file.size > MAX_BYTES) throw new Error("Image is larger than 4 MB.");
+  return uploadToStorage(file, folder);
+}
 
+// PDFs are not resized in the browser, so keep them under the 4 MB request limit with some room to spare.
+export async function uploadPdf(file: File, folder: string) {
+  if (file.type !== "application/pdf") throw new Error("Only PDF files are allowed.");
+  if (file.size > 3.5 * 1024 * 1024) throw new Error("PDF is larger than 3.5 MB.");
+  return uploadToStorage(file, folder);
+}
+
+async function uploadToStorage(file: File, folder: string) {
   const ext = file.type.split("/")[1].replace("jpeg", "jpg");
   const path = `${folder}/${Date.now()}-${crypto.randomUUID().slice(0, 8)}.${ext}`;
   const { error } = await supabase()

@@ -25,6 +25,23 @@ export default function ExamForm({ exam }: { exam?: Exam }) {
         <textarea name="description" rows={3} defaultValue={exam?.description} className={inputClass} />
       </Field>
 
+      <Field label="Official result PDF (optional)" hint="Shown as a download button on the result page. Up to 3.5 MB.">
+        <input
+          type="file"
+          name="pdf"
+          accept="application/pdf"
+          className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white hover:file:bg-primary/90"
+        />
+      </Field>
+      {exam?.pdf_url && (
+        <div className="flex flex-wrap items-center gap-4 text-sm -mt-2">
+          <a href={exam.pdf_url} target="_blank" className="text-primary underline">Current PDF ↗</a>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" name="remove_pdf" className="w-4 h-4" /> Remove PDF
+          </label>
+        </div>
+      )}
+
       <label className="flex items-center gap-2">
         <input type="checkbox" name="published" defaultChecked={exam?.published ?? false} className="w-4 h-4" />
         <span className="text-sm font-medium">Published — students can search this result on the website</span>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, MapPin, School, Search, Trophy } from "lucide-react";
+import { ArrowLeft, FileDown, MapPin, School, Search, Trophy } from "lucide-react";
 import Avatar from "@/components/Avatar";
 import { findResult, getExamBySlug, getResults, type ExamResult } from "@/lib/db";
 import { formatDate } from "@/lib/format";
@@ -123,6 +123,14 @@ export default async function ExamResult({ params, searchParams }: Props) {
           <h1 className="font-display text-3xl md:text-5xl font-semibold text-primary dark:text-white mb-3">{exam.title}</h1>
           {exam.exam_date && <p className="text-secondary font-medium">{formatDate(exam.exam_date)}</p>}
           {exam.description && <p className="opacity-80 mt-4 max-w-2xl mx-auto whitespace-pre-line">{exam.description}</p>}
+          {exam.pdf_url && (
+            <a
+              href={`${exam.pdf_url}?download=${exam.slug}.pdf`}
+              className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-white font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <FileDown className="w-4 h-4" /> Download official result (PDF)
+            </a>
+          )}
         </div>
 
         {toppersByClass.length === 0 && !searchable && (

@@ -53,6 +53,7 @@ export type Exam = {
   title: string;
   description: string;
   exam_date: string | null;
+  pdf_url?: string; // missing until migration 005 has been run
   published: boolean;
 };
 
@@ -197,4 +198,23 @@ export async function getResults(examId: string) {
   return check<ExamResult[]>(
     await supabase().from("exam_results").select("*").eq("exam_id", examId).order("class").order("merit_position", { nullsFirst: false }).order("roll")
   );
+}
+
+// Merit-list students across all published exams.
+export async function countAwardees() {
+  const { count, error } = await supabase()
+    .from("exam_results")
+    .select("id, exams!inner(published)", { count: "exact", head: true })
+    .not("merit_position", "is", null)
+    .eq("exams.published", true);
+  if (error) throw new Error(error.message);
+  return count ?? 0;
+}
+
+// Settings ---------------------------------------------------------------
+
+// Returns "" when the setting (or the settings table) does not exist yet, so pages fall back to defaults.
+export async function getSetting(key: string) {
+  const { data } = await supabase().from("settings").select("value").eq("key", key).maybeSingle();
+  return (data?.value as string | undefined) ?? "";
 }

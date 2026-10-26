@@ -16,7 +16,7 @@ import HomeGallerySection from "./HomeGallerySection";
 import Avatar from "@/components/Avatar";
 import NewsCard from "@/components/NewsCard";
 import SectionHeading from "@/components/SectionHeading";
-import { countPeople, getAlbums, getGallery, getNews, getPeople } from "@/lib/db";
+import { countAwardees, countPeople, getAlbums, getGallery, getNews, getPeople, getSetting } from "@/lib/db";
 import { site } from "@/lib/site";
 
 const programs = [
@@ -52,20 +52,25 @@ const leaderPositions = ["President", "General Secretary"];
 
 export const dynamic = "force-dynamic";
 
+// Used until a homepage image is uploaded from the admin.
+const DEFAULT_HERO = "/news/images/program2025.jpg";
+
 export default async function Home() {
-  const [committee, advisorCount, latestNews, gallery, albums] = await Promise.all([
+  const [committee, advisorCount, latestNews, gallery, albums, awardees, heroImage] = await Promise.all([
     getPeople("committee"),
     countPeople("advisor"),
     getNews({ limit: 3 }),
     getGallery(5),
     getAlbums(),
+    countAwardees(),
+    getSetting("hero_image"),
   ]);
   // Each photo opens straight in its album's lightbox.
   const albumSlug = new Map(albums.map((a) => [a.id, a.slug]));
 
   const stats = [
     { value: `${new Date().getFullYear() - site.founded}+`, label: "Years of Service" },
-    { value: "200+", label: "Merit Test 2025 Participants" },
+    { value: `${awardees}`, label: "Meritorious Students Honored" },
     { value: `${committee.length}`, label: "Committee Members" },
     { value: `${advisorCount}`, label: "Honorable Advisors" },
   ];
@@ -77,7 +82,7 @@ export default async function Home() {
       {/* Hero */}
       <section className="relative min-h-[600px] lg:min-h-[680px] flex items-center overflow-hidden bg-primary-dark text-white">
         <Image
-          src="/news/images/program2025.jpg"
+          src={heroImage || DEFAULT_HERO}
           alt=""
           fill
           priority
