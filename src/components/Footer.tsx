@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { FaFacebookF } from "react-icons/fa";
-import { site } from "@/lib/site";
+import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { developer, site } from "@/lib/site";
 
 const columns = [
   {
@@ -84,9 +84,31 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between gap-2 text-sm text-white/50">
+        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-white/50">
           <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-          <p>Developed by Fahmid Hasan</p>
+          <div className="flex items-center gap-3">
+            <span>
+              Designed &amp; developed by <span className="font-semibold text-white/80">{developer.name}</span>
+            </span>
+            {[
+              { href: developer.facebook, label: "Facebook", Icon: FaFacebookF },
+              { href: developer.linkedin, label: "LinkedIn", Icon: FaLinkedinIn },
+              { href: developer.instagram, label: "Instagram", Icon: FaInstagram },
+            ]
+              .filter((l) => l.href)
+              .map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${developer.name} on ${label}`}
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-secondary hover:text-primary-dark transition-colors"
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </a>
+              ))}
+          </div>
         </div>
       </div>
     </footer>

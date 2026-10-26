@@ -13,6 +13,14 @@ export const site = {
   facebook: "https://www.facebook.com/BMMCKP",
 };
 
+// Website developer credit shown at the bottom of every page. Empty links are hidden.
+export const developer = {
+  name: "Fahmid Hasan",
+  facebook: "https://www.facebook.com/profile.php?id=100088108552227",
+  linkedin: "https://www.linkedin.com/in/fahmid-hasan-tuhin-9b9a8a274/",
+  instagram: "https://www.instagram.com/fahmidhasan420/",
+};
+
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
