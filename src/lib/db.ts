@@ -45,6 +45,9 @@ export type ExamResult = {
   exam_id: string;
   roll: string | null;
   name: string;
+  father_name: string;
+  mother_name: string;
+  village: string;
   school: string;
   class: string;
   marks: number | null;

@@ -1,6 +1,8 @@
-Roll,Name,School,Class,Marks,Position
-5001,Example Student,Example Primary School,5,95,1
-5002,Another Student,Example Primary School,5,92,2
-8001,Example Student,Example High School,8,90,1
-10001,Example Student,Example High School,10,88,1
-8015,Not On Merit List,Example High School,8,61,
+Roll,Name,Father,Mother,Village,School,Class,Group,Marks,Position
+5001,Example Student,Example Father,Example Mother,Adampur,Example Primary School,5,,95,1
+8001,Example Student,Example Father,,Adampur,Example High School,8,,90,1
+10001,Example Student,Example Father,,Adampur,Example High School,10,,,1
+12001,Example Student,Example Father,Example Mother,Adampur,Example College,12,Science,,1
+12002,Example Student,Example Father,,Adampur,Example College,12,Arts,,1
+12003,Example Student,Example Father,,Adampur,Example College,12,Commerce,,1
+8015,Not On Merit List,Example Father,,Adampur,Example High School,8,,61,

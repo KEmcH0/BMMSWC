@@ -122,8 +122,12 @@ export async function saveTopper(_prev: string | null, formData: FormData) {
   const cls = normalizeClass(text(formData, "class"));
   const position = Number(text(formData, "merit_position"));
   const name = text(formData, "name");
+  const father_name = text(formData, "father_name");
   if (!cls || !position) return "Class and position are required.";
   if (!name) return "Name is required.";
+  const village = text(formData, "village");
+  if (!father_name) return "Father's name is required.";
+  if (!village) return "Village is required.";
 
   const marksText = text(formData, "marks");
   const marks = marksText ? Number(marksText) : null;
@@ -131,6 +135,9 @@ export async function saveTopper(_prev: string | null, formData: FormData) {
 
   const fields = {
     name,
+    father_name,
+    mother_name: text(formData, "mother_name"),
+    village,
     school: text(formData, "school"),
     roll: text(formData, "roll") || null,
     marks,

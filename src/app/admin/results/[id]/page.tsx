@@ -6,7 +6,12 @@ import { deleteExam } from "../actions";
 import ExamForm from "../ExamForm";
 import ResultsUpload from "../ResultsUpload";
 import TopperSlot from "../TopperSlot";
-import { site } from "@/lib/site";
+import { classLabel, site } from "@/lib/site";
+
+const classOrder = (cls: string) => {
+  const i = site.resultClasses.findIndex((c) => c.key === cls);
+  return i < 0 ? site.resultClasses.length : i;
+};
 
 export default async function EditExam({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -15,7 +20,7 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
   const results = await getResults(exam.id);
   const merit = results
     .filter((r) => r.merit_position !== null)
-    .sort((a, b) => Number(a.class) - Number(b.class) || a.merit_position! - b.merit_position!);
+    .sort((a, b) => classOrder(a.class) - classOrder(b.class) || a.merit_position! - b.merit_position!);
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -36,15 +41,16 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
             These are shown with photos on the result page. Fill each place and press Save.
           </p>
           <div className="space-y-8">
-            {site.resultClasses.map((cls) => (
+            {site.resultClasses.map(({ key: cls, label }) => (
               <section key={cls}>
-                <h3 className="font-bold text-primary mb-3">Class {cls}</h3>
+                <h3 className="font-bold text-primary mb-3">{label}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[1, 2, 3].map((pos) => (
                     <TopperSlot
                       key={pos}
                       examId={exam.id}
                       cls={cls}
+                      clsLabel={label}
                       position={pos}
                       result={results.find((r) => r.class === cls && r.merit_position === pos)}
                     />
@@ -67,7 +73,7 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
               <table className="w-full text-sm">
                 <thead className="bg-muted sticky top-0">
                   <tr>
-                    {["Pos.", "Roll", "Name", "School", "Class", "Marks"].map((h) => (
+                    {["Pos.", "Roll", "Name", "Father", "Village", "School", "Class", "Marks"].map((h) => (
                       <th key={h} className="text-left p-2 font-semibold">{h}</th>
                     ))}
                   </tr>
@@ -78,8 +84,10 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
                       <td className="p-2">{r.merit_position ?? "—"}</td>
                       <td className="p-2 font-mono">{r.roll ?? "—"}</td>
                       <td className="p-2">{r.name}</td>
+                      <td className="p-2">{r.father_name}</td>
+                      <td className="p-2">{r.village}</td>
                       <td className="p-2">{r.school}</td>
-                      <td className="p-2">{r.class}</td>
+                      <td className="p-2 whitespace-nowrap">{classLabel(r.class)}</td>
                       <td className="p-2">{r.marks ?? "—"}</td>
                     </tr>
                   ))}

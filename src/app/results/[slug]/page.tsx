@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Search, Trophy } from "lucide-react";
+import { ArrowLeft, MapPin, School, Search, Trophy } from "lucide-react";
 import Avatar from "@/components/Avatar";
 import { findResult, getExamBySlug, getResults, type ExamResult } from "@/lib/db";
 import { formatDate } from "@/lib/format";
-import { site } from "@/lib/site";
+import { classLabel, site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -49,7 +49,26 @@ function TopperCard({ r }: { r: ExamResult }) {
         </span>
       </div>
       <h3 className="text-lg font-bold text-primary dark:text-white mt-2">{r.name}</h3>
-      {r.school && <p className="text-sm opacity-75">{r.school}</p>}
+      {(r.father_name || r.mother_name) && (
+        <div className="mt-2 text-sm text-muted-foreground space-y-0.5">
+          {r.father_name && <p>Father: <span className="text-foreground">{r.father_name}</span></p>}
+          {r.mother_name && <p>Mother: <span className="text-foreground">{r.mother_name}</span></p>}
+        </div>
+      )}
+      {(r.school || r.village) && (
+        <div className="mt-3 text-sm text-muted-foreground space-y-1">
+          {r.school && (
+            <p className="flex items-start justify-center gap-1.5">
+              <School className="w-4 h-4 mt-0.5 shrink-0 text-secondary" /> {r.school}
+            </p>
+          )}
+          {r.village && (
+            <p className="flex items-start justify-center gap-1.5">
+              <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-secondary" /> {r.village}
+            </p>
+          )}
+        </div>
+      )}
       {r.marks !== null && (
         <p className="mt-3 text-2xl font-bold">
           {r.marks}
@@ -73,8 +92,9 @@ export default async function ExamResult({ params, searchParams }: Props) {
   ]);
 
   const toppersByClass = site.resultClasses
-    .map((cls) => ({
+    .map(({ key: cls, label }) => ({
       cls,
+      label,
       toppers: [1, 2, 3]
         .map((pos) => results.find((r) => r.class === cls && r.merit_position === pos))
         .filter((r): r is ExamResult => !!r),
@@ -104,12 +124,12 @@ export default async function ExamResult({ params, searchParams }: Props) {
 
         {/* Top 3 of each class */}
         <div className="space-y-16">
-          {toppersByClass.map(({ cls, toppers }) => (
+          {toppersByClass.map(({ cls, label, toppers }) => (
             <section key={cls}>
               <div className="flex items-center gap-4 mb-10">
                 <div className="h-px flex-1 bg-secondary/30" />
                 <h2 className="text-2xl font-bold text-primary dark:text-white flex items-center gap-2 whitespace-nowrap">
-                  <Trophy className="w-6 h-6 text-secondary" /> Class {cls}
+                  <Trophy className="w-6 h-6 text-secondary" /> {label}
                 </h2>
                 <div className="h-px flex-1 bg-secondary/30" />
               </div>
@@ -168,8 +188,11 @@ export default async function ExamResult({ params, searchParams }: Props) {
                   {[
                     ["Name", found.name],
                     ["Roll", found.roll],
+                    ["Father's name", found.father_name],
+                    ["Mother's name", found.mother_name],
+                    ["Village", found.village],
                     ["School", found.school],
-                    ["Class", found.class],
+                    ["Class", found.class && classLabel(found.class)],
                     ["Marks", found.marks?.toString()],
                   ]
                     .filter(([, v]) => v)

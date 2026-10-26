@@ -26,7 +26,8 @@ export default function ResultsUpload({ examId, hasResults }: { examId: string; 
           <a href="/results-template.csv" download className="text-primary underline">template</a>{" "}
           and fill it in Excel or Google Sheets.
         </li>
-        <li>Columns: <b>Roll</b> (required), Name, School, Class, Marks, Position. Leave Position empty for students not on the merit list.</li>
+        <li>Columns: <b>Roll</b> (required), Name, Father, Mother, Village, School, Class, Group, Marks, Position. Leave Position empty for students not on the merit list.</li>
+        <li>For Class 12, write the <b>Group</b> as Science, Arts or Commerce. Mother and Marks can be left empty.</li>
         <li>Save as <b>CSV UTF-8</b> (Excel: File → Save As → “CSV UTF-8”) so Bangla names stay correct.</li>
         <li>Uploading again replaces the previous results for this exam. Topper photos are kept.</li>
       </ol>

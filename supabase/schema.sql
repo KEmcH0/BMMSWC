@@ -55,8 +55,11 @@ create table if not exists exam_results (
   exam_id uuid not null references exams (id) on delete cascade,
   roll text,                           -- may be empty for toppers entered by hand
   name text not null default '',
+  father_name text not null default '',
+  mother_name text not null default '',
+  village text not null default '',
   school text not null default '',
-  class text not null default '',
+  class text not null default '',      -- "5", "8", "10", or "12-science" / "12-arts" / "12-commerce"
   marks numeric,
   merit_position int,
   photo_url text not null default '',

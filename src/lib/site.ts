@@ -4,8 +4,15 @@ export const site = {
   fullName: "Bangladesh Manipuri Muslim Student Welfare Community",
   founded: 1985,
   committeeSession: "2025–26",
-  // Classes whose top 3 are shown on each exam result page. Add "12" here to show Class 12.
-  resultClasses: ["5", "8", "10"],
+  // Result sections, each with its own top 3. Class 12 is split by group.
+  resultClasses: [
+    { key: "5", label: "Class 5" },
+    { key: "8", label: "Class 8" },
+    { key: "10", label: "Class 10" },
+    { key: "12-science", label: "Class 12 · Science" },
+    { key: "12-arts", label: "Class 12 · Arts" },
+    { key: "12-commerce", label: "Class 12 · Commerce" },
+  ],
   address: "Adampur Bazar, Moulvibazar",
   phone: "+880 1942357476",
   phoneHref: "tel:+8801942357476",
@@ -21,6 +28,10 @@ export const developer = {
   linkedin: "https://www.linkedin.com/in/fahmid-hasan-tuhin-9b9a8a274/",
   instagram: "https://www.instagram.com/fahmidhasan420/",
 };
+
+export function classLabel(key: string) {
+  return site.resultClasses.find((c) => c.key === key)?.label ?? `Class ${key}`;
+}
 
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
