@@ -11,7 +11,6 @@ const columns = [
       { name: "About Us", href: "/about" },
       { name: "Executive Committee", href: "/committee" },
       { name: "Advisors", href: "/advisors" },
-      { name: "Alumni", href: "/alumni" },
     ],
   },
   {

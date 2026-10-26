@@ -12,7 +12,6 @@ const navLinks = [
   { name: "About", href: "/about" },
   { name: "Committee", href: "/committee" },
   { name: "Advisors", href: "/advisors" },
-  { name: "Alumni", href: "/alumni" },
   { name: "News & Events", href: "/news" },
   { name: "Results", href: "/results" },
   { name: "Gallery", href: "/gallery" },

@@ -5,7 +5,7 @@ import { siteUrl as base } from "@/lib/site";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pages = ["", "/about", "/committee", "/advisors", "/alumni", "/news", "/results", "/gallery", "/contact"];
+  const pages = ["", "/about", "/committee", "/advisors", "/news", "/results", "/gallery", "/contact"];
   const [news, exams, albums] = await Promise.all([getNews(), getExams(), getAlbums()]);
   return [
     ...pages.map((p) => ({ url: `${base}${p}` })),
