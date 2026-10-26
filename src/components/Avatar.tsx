@@ -27,7 +27,7 @@ export default function Avatar({
         <Image src={src} alt={name} fill sizes={`${size}px`} className="object-cover" />
       ) : (
         <span
-          className="absolute inset-0 flex items-center justify-center font-bold text-primary"
+          className="absolute inset-0 flex items-center justify-center font-bold text-primary dark:text-secondary"
           style={{ fontSize: size / 3 }}
         >
           {initials}

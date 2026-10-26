@@ -16,7 +16,7 @@ import HomeGallerySection from "./HomeGallerySection";
 import Avatar from "@/components/Avatar";
 import NewsCard from "@/components/NewsCard";
 import SectionHeading from "@/components/SectionHeading";
-import { countPeople, getGallery, getNews, getPeople } from "@/lib/db";
+import { countPeople, getAlbums, getGallery, getNews, getPeople } from "@/lib/db";
 import { site } from "@/lib/site";
 
 const programs = [
@@ -53,12 +53,15 @@ const leaderPositions = ["President", "General Secretary"];
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [committee, advisorCount, latestNews, gallery] = await Promise.all([
+  const [committee, advisorCount, latestNews, gallery, albums] = await Promise.all([
     getPeople("committee"),
     countPeople("advisor"),
     getNews({ limit: 3 }),
     getGallery(5),
+    getAlbums(),
   ]);
+  // Each photo opens straight in its album's lightbox.
+  const albumSlug = new Map(albums.map((a) => [a.id, a.slug]));
 
   const stats = [
     { value: `${new Date().getFullYear() - site.founded}+`, label: "Years of Service" },
@@ -252,7 +255,12 @@ export default async function Home() {
         </section>
       )}
 
-      <HomeGallerySection images={gallery.map((g) => ({ url: g.image_url, caption: g.caption }))} />
+      <HomeGallerySection
+        images={gallery.map((g) => {
+          const slug = g.album_id && albumSlug.get(g.album_id);
+          return { url: g.image_url, caption: g.caption, href: slug ? `/gallery/${slug}?photo=${g.id}` : "/gallery" };
+        })}
+      />
 
       {/* Call to action */}
       <section className="pb-24">
@@ -282,12 +290,14 @@ export default async function Home() {
                 >
                   <Phone className="w-4 h-4" /> Call
                 </a>
-                <a
-                  href={`mailto:${site.email}`}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/40 font-semibold hover:bg-white/10 transition"
-                >
-                  <Mail className="w-4 h-4" /> Email
-                </a>
+                {site.email && (
+                  <a
+                    href={`mailto:${site.email}`}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/40 font-semibold hover:bg-white/10 transition"
+                  >
+                    <Mail className="w-4 h-4" /> Email
+                  </a>
+                )}
               </div>
             </div>
           </div>

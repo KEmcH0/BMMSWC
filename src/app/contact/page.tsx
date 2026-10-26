@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const channels = [
   { icon: Phone, label: "Phone", value: site.phone, href: site.phoneHref },
-  { icon: Mail, label: "Email", value: site.email, href: `mailto:${site.email}` },
+  ...(site.email ? [{ icon: Mail, label: "Email", value: site.email, href: `mailto:${site.email}` }] : []),
   { icon: FaFacebook, label: "Facebook", value: "facebook.com/BMMCKP", href: site.facebook, external: true },
   { icon: MapPin, label: "Address", value: site.address },
 ];
@@ -25,7 +25,7 @@ export default function Contact() {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 content-start">
-            {channels.map(({ icon: Icon, label, value, href, external }) => {
+            {channels.map(({ icon: Icon, label, value, href, external }, i) => {
               const body = (
                 <>
                   <div className="w-12 h-12 rounded-xl bg-primary text-secondary flex items-center justify-center mb-4">
@@ -35,7 +35,9 @@ export default function Contact() {
                   <div className="font-semibold break-words">{value}</div>
                 </>
               );
-              const cls = "bg-card border rounded-2xl p-6 block";
+              // A lone last card (odd count) spans the full row so the grid has no gap.
+              const lone = i === channels.length - 1 && channels.length % 2 === 1;
+              const cls = `bg-card border rounded-2xl p-6 block ${lone ? "sm:col-span-2" : ""}`;
               return href ? (
                 <a
                   key={label}

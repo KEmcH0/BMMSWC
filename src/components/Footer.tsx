@@ -75,10 +75,12 @@ export default function Footer() {
                 <Phone className="w-5 h-5 shrink-0 text-secondary" />
                 <a href={site.phoneHref} className="hover:text-white transition-colors">{site.phone}</a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 shrink-0 text-secondary" />
-                <a href={`mailto:${site.email}`} className="hover:text-white transition-colors break-all">{site.email}</a>
-              </li>
+              {site.email && (
+                <li className="flex items-center gap-3">
+                  <Mail className="w-5 h-5 shrink-0 text-secondary" />
+                  <a href={`mailto:${site.email}`} className="hover:text-white transition-colors break-all">{site.email}</a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -16,7 +16,8 @@ export const site = {
   address: "Adampur Bazar, Moulvibazar",
   phone: "+880 1942357476",
   phoneHref: "tel:+8801942357476",
-  email: "contact@bmmswc.org",
+  // Leave empty until the organization has a working address; empty hides it everywhere.
+  email: "",
   facebook: "https://www.facebook.com/BMMCKP",
 };
 

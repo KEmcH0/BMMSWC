@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 
 // Mosaic of the latest photos: one large tile and up to four small ones.
-export default function HomeGallerySection({ images }: { images: { url: string; caption: string }[] }) {
+export default function HomeGallerySection({ images }: { images: { url: string; caption: string; href: string }[] }) {
   if (!images.length) return null;
   const [first, ...rest] = images.slice(0, 5);
 
@@ -25,7 +25,7 @@ export default function HomeGallerySection({ images }: { images: { url: string; 
           {[first, ...rest].map((img, i) => (
             <Link
               key={img.url}
-              href="/gallery"
+              href={img.href}
               className={`group relative overflow-hidden rounded-2xl bg-muted ${
                 i === 0 ? "col-span-2 row-span-2 aspect-[4/3] lg:aspect-auto" : "aspect-square lg:aspect-auto"
               }`}
