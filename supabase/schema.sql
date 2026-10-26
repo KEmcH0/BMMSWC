@@ -33,12 +33,27 @@ create table if not exists news (
 );
 create index if not exists news_date on news (date desc);
 
-create table if not exists gallery (
+create table if not exists albums (
   id uuid primary key default gen_random_uuid(),
-  image_url text not null,
-  caption text not null default '',
+  slug text not null unique,
+  title text not null,
+  description text not null default '',
+  event_date date,
+  cover_url text not null default '',     -- empty = first photo of the album
+  news_id uuid references news (id) on delete set null,
   created_at timestamptz not null default now()
 );
+
+create table if not exists gallery (
+  id uuid primary key default gen_random_uuid(),
+  album_id uuid references albums (id) on delete cascade,
+  image_url text not null,
+  caption text not null default '',
+  width int,
+  height int,
+  created_at timestamptz not null default now()
+);
+create index if not exists gallery_album on gallery (album_id, created_at);
 
 create table if not exists exams (
   id uuid primary key default gen_random_uuid(),
@@ -69,6 +84,7 @@ create index if not exists exam_results_merit on exam_results (exam_id, merit_po
 
 alter table people enable row level security;
 alter table news enable row level security;
+alter table albums enable row level security;
 alter table gallery enable row level security;
 alter table exams enable row level security;
 alter table exam_results enable row level security;

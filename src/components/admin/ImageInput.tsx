@@ -30,6 +30,7 @@ export default function ImageInput({
   label?: string;
 }) {
   const [previews, setPreviews] = useState<string[]>(current ? [current] : []);
+  const [sizes, setSizes] = useState("");
   const [busy, setBusy] = useState(false);
 
   async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -43,6 +44,16 @@ export default function ImageInput({
       resized.forEach((f) => dt.items.add(f));
       input.files = dt.files;
       setPreviews(resized.map((f) => URL.createObjectURL(f)));
+      // Sent along as "1600x1067,1067x1600" so the gallery can lay photos out without cropping.
+      const dims = await Promise.all(
+        resized.map((f) =>
+          createImageBitmap(f).then(
+            (b) => `${b.width}x${b.height}`,
+            () => ""
+          )
+        )
+      );
+      setSizes(dims.join(","));
     } finally {
       setBusy(false);
     }
@@ -59,6 +70,7 @@ export default function ImageInput({
           ))}
         </div>
       )}
+      <input type="hidden" name={`${name}_sizes`} value={sizes} />
       <input
         type="file"
         name={name}

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Images } from "lucide-react";
 import NewsCard from "@/components/NewsCard";
-import { getNews, getNewsBySlug } from "@/lib/db";
+import { getAlbumForNews, getAlbumPhotos, getNews, getNewsBySlug } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -33,7 +33,9 @@ export default async function NewsDetail({ params }: Props) {
   const item = await getNewsBySlug(slug);
   if (!item) notFound();
 
-  const more = (await getNews({ limit: 4 })).filter((n) => n.id !== item.id).slice(0, 3);
+  const [latest, album] = await Promise.all([getNews({ limit: 4 }), getAlbumForNews(item.id)]);
+  const more = latest.filter((n) => n.id !== item.id).slice(0, 3);
+  const albumPhotos = album ? await getAlbumPhotos(album.id) : [];
 
   return (
     <article className="container mx-auto px-4 py-12">
@@ -62,6 +64,26 @@ export default async function NewsDetail({ params }: Props) {
             <p key={i} className="whitespace-pre-line">{para}</p>
           ))}
         </div>
+
+        {album && albumPhotos.length > 0 && (
+          <Link href={`/gallery/${album.slug}`} className="group mt-12 block bg-card border rounded-2xl p-5 hover:shadow-lg hover:border-secondary/50 transition-all">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <h2 className="font-display text-xl font-semibold text-primary dark:text-white flex items-center gap-2">
+                <Images className="w-5 h-5 text-secondary" /> Photos from this event
+              </h2>
+              <span className="flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-white group-hover:gap-2.5 transition-all shrink-0">
+                {albumPhotos.length} photos <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-2">
+              {albumPhotos.slice(0, 4).map((p) => (
+                <div key={p.id} className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+                  <Image src={p.image_url} alt={p.caption || album.title} fill sizes="(min-width: 768px) 180px, 25vw" className="object-cover" />
+                </div>
+              ))}
+            </div>
+          </Link>
+        )}
       </div>
 
       {more.length > 0 && (

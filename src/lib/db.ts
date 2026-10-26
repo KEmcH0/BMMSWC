@@ -26,10 +26,26 @@ export type NewsItem = {
 
 export type GalleryItem = {
   id: string;
+  album_id: string | null;
   image_url: string;
   caption: string;
+  width: number | null;
+  height: number | null;
   created_at: string;
 };
+
+export type Album = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  event_date: string | null;
+  cover_url: string;
+  news_id: string | null;
+  created_at: string;
+};
+
+export type AlbumSummary = Album & { photo_count: number; cover: string };
 
 export type Exam = {
   id: string;
@@ -111,6 +127,46 @@ export async function getGallery(limit?: number) {
   let q = supabase().from("gallery").select("*").order("created_at", { ascending: false });
   if (limit) q = q.limit(limit);
   return check<GalleryItem[]>(await q);
+}
+
+// Albums ---------------------------------------------------------------
+
+// Newest event first; albums without a date sort by when they were created.
+export async function getAlbums({ includeEmpty = false } = {}): Promise<AlbumSummary[]> {
+  const [albums, photos] = await Promise.all([
+    supabase().from("albums").select("*"),
+    supabase().from("gallery").select("album_id, image_url").order("created_at"),
+  ]);
+  const photoRows = check<Pick<GalleryItem, "album_id" | "image_url">[]>(photos);
+  const sortKey = (a: Album) => a.event_date ?? a.created_at.slice(0, 10);
+
+  return check<Album[]>(albums)
+    .map((a) => {
+      const own = photoRows.filter((p) => p.album_id === a.id);
+      return { ...a, photo_count: own.length, cover: a.cover_url || own[0]?.image_url || "" };
+    })
+    .filter((a) => includeEmpty || a.photo_count > 0)
+    .sort((a, b) => sortKey(b).localeCompare(sortKey(a)));
+}
+
+export async function getAlbumBySlug(slug: string) {
+  return check<Album | null>(await supabase().from("albums").select("*").eq("slug", slug).maybeSingle());
+}
+
+export async function getAlbumById(id: string) {
+  return check<Album | null>(await supabase().from("albums").select("*").eq("id", id).maybeSingle());
+}
+
+export async function getAlbumForNews(newsId: string) {
+  return check<Album | null>(
+    await supabase().from("albums").select("*").eq("news_id", newsId).limit(1).maybeSingle()
+  );
+}
+
+export async function getAlbumPhotos(albumId: string) {
+  return check<GalleryItem[]>(
+    await supabase().from("gallery").select("*").eq("album_id", albumId).order("created_at").order("id")
+  );
 }
 
 // Exams ----------------------------------------------------------------

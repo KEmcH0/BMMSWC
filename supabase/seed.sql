@@ -39,6 +39,9 @@ insert into news (slug, title, date, category, body, image_url) values
   ('meritorious-student-reception-2025', 'Meritorious Student Reception', '2025-12-02', 'Education', 'Hard work, resilience, and pure dedication—all under one roof today! We are incredibly proud to host the Meritorious Student Reception and Prize Giving Ceremony to honor our top achievers.', '/news/images/songbordhona.jpg'),
   ('higher-studies-seminar-2025', 'Higher Studies Seminar 2025', '2025-10-03', 'Workshop', 'Charting the path to global success at the Higher Studies Seminar 2025! This event brings together ambitious minds to explore academic pathways, scholarship opportunities, and career-defining choices. Your journey to the world''s top universities begins right here!', '/news/images/seminar.jpeg');
 
+insert into albums (slug, title, description) values
+  ('bmmswc-moments', 'BMMSWC Moments', 'Photos from our programs and gatherings.');
+
 insert into gallery (image_url) values
   ('/gallery/603891514_1307038501463533_8430517571634422696_n.jpg'),
   ('/gallery/603892548_1307038288130221_4193693146109389853_n.jpg'),
@@ -55,3 +58,4 @@ insert into gallery (image_url) values
   ('/gallery/605634620_1307038354796881_7321560528529563128_n.jpg'),
   ('/gallery/606324332_1307038471463536_4295542107717079759_n.jpg'),
   ('/gallery/607183760_1307038361463547_3630832185239016193_n.jpg');
+update gallery set album_id = (select id from albums where slug = 'bmmswc-moments') where album_id is null;
