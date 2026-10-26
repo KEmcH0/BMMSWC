@@ -87,6 +87,15 @@ export default function Footer() {
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-white/50">
           <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
           <div className="flex items-center gap-3">
+            {developer.photo && (
+              <Image
+                src={developer.photo}
+                alt={developer.name}
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full object-cover ring-2 ring-secondary/80"
+              />
+            )}
             <span>
               Designed &amp; developed by <span className="font-semibold text-white/80">{developer.name}</span>
             </span>

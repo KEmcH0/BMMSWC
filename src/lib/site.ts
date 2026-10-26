@@ -16,6 +16,7 @@ export const site = {
 // Website developer credit shown at the bottom of every page. Empty links are hidden.
 export const developer = {
   name: "Fahmid Hasan",
+  photo: "/developer/fahmid.jpg",
   facebook: "https://www.facebook.com/profile.php?id=100088108552227",
   linkedin: "https://www.linkedin.com/in/fahmid-hasan-tuhin-9b9a8a274/",
   instagram: "https://www.instagram.com/fahmidhasan420/",
