@@ -113,13 +113,14 @@ export async function deleteExam(formData: FormData) {
   redirect("/admin/results");
 }
 
-// Saves one topper slot (class + 1st/2nd/3rd). Updates the student already in that slot, if any.
+// Saves one student on a class's merit list: updates it when an id is sent, otherwise adds a new one.
 export async function saveTopper(_prev: string | null, formData: FormData) {
   await requireAdmin();
 
   const exam = await getExamById(text(formData, "exam_id"));
   if (!exam) return "Exam not found.";
   const cls = normalizeClass(text(formData, "class"));
+  const id = text(formData, "id");
   const position = Number(text(formData, "merit_position"));
   const name = text(formData, "name");
   const father_name = text(formData, "father_name");
@@ -145,7 +146,8 @@ export async function saveTopper(_prev: string | null, formData: FormData) {
 
   try {
     const results = await getResults(exam.id);
-    const existing = results.find((r) => r.class === cls && r.merit_position === position);
+    const existing = id ? results.find((r) => r.id === id) : undefined;
+    if (id && !existing) return "This student was already removed. Please reload the page.";
     if (fields.roll && results.some((r) => r.roll === fields.roll && r.id !== existing?.id)) {
       return `Roll ${fields.roll} is already used by another student in this exam.`;
     }
@@ -158,7 +160,10 @@ export async function saveTopper(_prev: string | null, formData: FormData) {
     }
 
     const res = existing
-      ? await supabase().from("exam_results").update({ ...fields, photo_url }).eq("id", existing.id)
+      ? await supabase()
+          .from("exam_results")
+          .update({ ...fields, photo_url, merit_position: position })
+          .eq("id", existing.id)
       : await supabase()
           .from("exam_results")
           .insert({ ...fields, photo_url, exam_id: exam.id, class: cls, merit_position: position });

@@ -36,8 +36,8 @@
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-sans: var(--font-jakarta);
-  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-jakarta), var(--font-bangla);
+  --font-display: var(--font-fraunces), var(--font-bangla);
 }
 
 @layer base {

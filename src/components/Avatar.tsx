@@ -14,7 +14,8 @@ export default function Avatar({
 }) {
   const initials = name
     .split(/\s+/)
-    .filter(Boolean)
+    // Skip abbreviations like "Md." or "মো:" so initials come from the actual name.
+    .filter((w) => w && !/[.:]$/.test(w))
     .slice(0, 2)
     .map((w) => w[0])
     .join("")

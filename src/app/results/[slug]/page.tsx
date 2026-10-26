@@ -19,6 +19,11 @@ const PLACES: Record<number, { label: string; ring: string; badge: string }> = {
   2: { label: "2nd", ring: "border-slate-300", badge: "bg-slate-300 text-slate-900" },
   3: { label: "3rd", ring: "border-amber-600", badge: "bg-amber-600 text-white" },
 };
+const OTHER_PLACE = { ring: "border-primary/20", badge: "bg-primary text-white" };
+
+function placeLabel(n: number) {
+  return PLACES[n]?.label ?? `${n}th`;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const exam = await getExamBySlug((await params).slug);
@@ -26,13 +31,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${exam.title} Result | BMMSWC`, description: `Top students of ${exam.title}.` };
 }
 
-function TopperCard({ r }: { r: ExamResult }) {
-  const place = PLACES[r.merit_position!];
+function TopperCard({ r, joint }: { r: ExamResult; joint: boolean }) {
+  const place = { ...OTHER_PLACE, ...PLACES[r.merit_position!] };
   const first = r.merit_position === 1;
   return (
     <div
-      className={`bg-card border rounded-2xl p-6 text-center flex flex-col items-center shadow-sm ${
-        first ? "md:-translate-y-4 shadow-lg border-yellow-400/60" : ""
+      className={`h-full bg-card border rounded-2xl p-6 text-center flex flex-col items-center shadow-sm ${
+        first ? "shadow-lg border-yellow-400/60" : ""
       }`}
     >
       <div className="relative mb-4">
@@ -43,9 +48,10 @@ function TopperCard({ r }: { r: ExamResult }) {
           className={`${first ? "w-32 h-32" : "w-28 h-28"} border-4 ${place.ring}`}
         />
         <span
-          className={`absolute -bottom-2 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 rounded-full shadow ${place.badge}`}
+          className={`absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-bold px-3 py-1 rounded-full shadow ${place.badge}`}
         >
-          {place.label}
+          {placeLabel(r.merit_position!)}
+          {joint && " (joint)"}
         </span>
       </div>
       <h3 className="text-lg font-bold text-primary dark:text-white mt-2">{r.name}</h3>
@@ -95,9 +101,10 @@ export default async function ExamResult({ params, searchParams }: Props) {
     .map(({ key: cls, label }) => ({
       cls,
       label,
-      toppers: [1, 2, 3]
-        .map((pos) => results.find((r) => r.class === cls && r.merit_position === pos))
-        .filter((r): r is ExamResult => !!r),
+      toppers: results
+        .filter((r) => r.class === cls && r.merit_position !== null)
+        // Students sharing a (joint) place are listed by name.
+        .sort((a, b) => a.merit_position! - b.merit_position! || a.name.localeCompare(b.name, "bn")),
     }))
     .filter((c) => c.toppers.length > 0);
 
@@ -133,16 +140,13 @@ export default async function ExamResult({ params, searchParams }: Props) {
                 </h2>
                 <div className="h-px flex-1 bg-secondary/30" />
               </div>
-              {/* Podium order on wide screens: 2nd, 1st, 3rd */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-4xl mx-auto">
+              <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
                 {toppers.map((r) => (
-                  <div
-                    key={r.id}
-                    className={
-                      r.merit_position === 1 ? "md:order-2" : r.merit_position === 2 ? "md:order-1" : "md:order-3"
-                    }
-                  >
-                    <TopperCard r={r} />
+                  <div key={r.id} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]">
+                    <TopperCard
+                      r={r}
+                      joint={toppers.filter((t) => t.merit_position === r.merit_position).length > 1}
+                    />
                   </div>
                 ))}
               </div>

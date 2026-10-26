@@ -5,7 +5,7 @@ import { getExamById, getResults } from "@/lib/db";
 import { deleteExam } from "../actions";
 import ExamForm from "../ExamForm";
 import ResultsUpload from "../ResultsUpload";
-import TopperSlot from "../TopperSlot";
+import TopperForm from "../TopperForm";
 import { classLabel, site } from "@/lib/site";
 
 const classOrder = (cls: string) => {
@@ -20,7 +20,12 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
   const results = await getResults(exam.id);
   const merit = results
     .filter((r) => r.merit_position !== null)
-    .sort((a, b) => classOrder(a.class) - classOrder(b.class) || a.merit_position! - b.merit_position!);
+    .sort(
+      (a, b) =>
+        classOrder(a.class) - classOrder(b.class) ||
+        a.merit_position! - b.merit_position! ||
+        a.name.localeCompare(b.name, "bn")
+    );
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -36,25 +41,21 @@ export default async function EditExam({ params }: { params: Promise<{ id: strin
         <ExamForm exam={exam} />
 
         <div className="bg-card border rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-1">Top 3 of each class</h2>
+          <h2 className="text-lg font-semibold mb-1">Merit list of each class</h2>
           <p className="text-sm opacity-70 mb-6">
-            These are shown with photos on the result page. Fill each place and press Save.
+            Shown with photos on the result page. Add up to 5th place; for a joint place, add two students with the same place.
           </p>
           <div className="space-y-8">
             {site.resultClasses.map(({ key: cls, label }) => (
               <section key={cls}>
                 <h3 className="font-bold text-primary mb-3">{label}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[1, 2, 3].map((pos) => (
-                    <TopperSlot
-                      key={pos}
-                      examId={exam.id}
-                      cls={cls}
-                      clsLabel={label}
-                      position={pos}
-                      result={results.find((r) => r.class === cls && r.merit_position === pos)}
-                    />
-                  ))}
+                  {merit
+                    .filter((r) => r.class === cls)
+                    .map((r) => (
+                      <TopperForm key={r.id} examId={exam.id} cls={cls} clsLabel={label} result={r} />
+                    ))}
+                  <TopperForm examId={exam.id} cls={cls} clsLabel={label} />
                 </div>
               </section>
             ))}
