@@ -1,27 +1,28 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Calendar } from "lucide-react";
 import NewsCard from "@/components/NewsCard";
-import { formatDate, getNewsBySlug, newsItems } from "@/lib/news";
+import { getNews, getNewsBySlug } from "@/lib/db";
+import { formatDate } from "@/lib/format";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return newsItems.map((item) => ({ slug: item.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const item = getNewsBySlug(slug);
+  const item = await getNewsBySlug(slug);
   if (!item) return {};
+  const description = item.body.slice(0, 200);
   return {
     title: `${item.title} | BMMSWC`,
-    description: item.desc,
+    description,
     openGraph: {
       title: item.title,
-      description: item.desc,
-      images: [item.img],
+      description,
+      images: item.image_url ? [item.image_url] : undefined,
       type: "article",
     },
   };
@@ -29,10 +30,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NewsDetail({ params }: Props) {
   const { slug } = await params;
-  const item = getNewsBySlug(slug);
+  const item = await getNewsBySlug(slug);
   if (!item) notFound();
 
-  const more = newsItems.filter((n) => n.slug !== item.slug).slice(0, 3);
+  const more = (await getNews({ limit: 4 })).filter((n) => n.id !== item.id).slice(0, 3);
 
   return (
     <article className="container mx-auto px-4 py-12">
@@ -50,11 +51,17 @@ export default async function NewsDetail({ params }: Props) {
 
         <h1 className="text-3xl md:text-4xl font-bold text-primary mb-8 leading-tight">{item.title}</h1>
 
-        <div className="rounded-2xl overflow-hidden mb-8 bg-muted">
-          <img src={item.img} alt={item.title} className="w-full h-auto" />
-        </div>
+        {item.image_url && (
+          <div className="rounded-2xl overflow-hidden mb-8 bg-muted">
+            <Image src={item.image_url} alt={item.title} width={1200} height={800} sizes="(min-width: 768px) 768px, 100vw" className="w-full h-auto" priority />
+          </div>
+        )}
 
-        <p className="text-lg leading-relaxed opacity-90 whitespace-pre-line">{item.desc}</p>
+        <div className="space-y-4 text-lg leading-relaxed opacity-90">
+          {item.body.split(/\n\s*\n/).map((para, i) => (
+            <p key={i} className="whitespace-pre-line">{para}</p>
+          ))}
+        </div>
       </div>
 
       {more.length > 0 && (
@@ -62,7 +69,7 @@ export default async function NewsDetail({ params }: Props) {
           <h2 className="text-2xl font-bold text-primary mb-8">More News</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {more.map((n) => (
-              <NewsCard key={n.slug} item={n} />
+              <NewsCard key={n.id} item={n} />
             ))}
           </div>
         </section>

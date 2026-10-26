@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/next";
+import { siteUrl } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,16 +17,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "BMMSWC - Bangladesh Manipuri Muslim Student Welfare Community",
   description: "Official online platform of the Bangladesh Manipuri Muslim Student Welfare Community.",
+  openGraph: {
+    siteName: "BMMSWC",
+    type: "website",
+    images: ["/news/images/program2025.jpg"],
+  },
 };
 
 export default function RootLayout({

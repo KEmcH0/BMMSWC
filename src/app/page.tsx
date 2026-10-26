@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-
 import Link from "next/link";
 import {
   ArrowRight,
@@ -15,10 +12,12 @@ import { FaFacebook } from "react-icons/fa";
 
 import HomeGallerySection from "./HomeGallerySection";
 import NewsCard from "@/components/NewsCard";
-import { advisors, committeeMembers } from "@/lib/data";
-import { newsItems } from "@/lib/news";
+import Avatar from "@/components/Avatar";
+import { countPeople, getGallery, getNews, getPeople } from "@/lib/db";
+import { site } from "@/lib/site";
 
-const FOUNDED = 1985;
+const FOUNDED = site.founded;
+
 
 const programs = [
   {
@@ -45,31 +44,31 @@ const programs = [
 
 const leaderPositions = ["President", "General Secretary"];
 
-export default function Home() {
-  const galleryDir = path.join(process.cwd(), "public", "gallery");
+export const dynamic = "force-dynamic";
 
-  const galleryImages = fs.existsSync(galleryDir)
-    ? fs
-        .readdirSync(galleryDir)
-        .filter((fileName) => /\.(jpe?g|png|webp|gif|avif)$/i.test(fileName))
-        .map((fileName) => `/gallery/${fileName}`)
-    : [];
+export default async function Home() {
+  const [committee, advisorCount, latestNews, gallery] = await Promise.all([
+    getPeople("committee"),
+    countPeople("advisor"),
+    getNews({ limit: 3 }),
+    getGallery(24),
+  ]);
+  const galleryImages = gallery.map((g) => g.image_url);
 
   const stats = [
     { value: `${new Date().getFullYear() - FOUNDED}+`, label: "Years of Service" },
     { value: "200+", label: "Merit Test 2025 Participants" },
-    { value: `${committeeMembers.length}`, label: "Committee Members" },
-    { value: `${advisors.length}`, label: "Advisors" },
+    { value: `${committee.length}`, label: "Committee Members" },
+    { value: `${advisorCount}`, label: "Advisors" },
   ];
 
-  const leaders = leaderPositions.flatMap((p) => committeeMembers.filter((m) => m.position === p));
-  const latestNews = newsItems.slice(0, 3);
+  const leaders = leaderPositions.flatMap((p) => committee.filter((m) => m.position === p));
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-primary text-white py-20 lg:py-32 overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" />
+        <div className="absolute inset-0 opacity-20 bg-[url('/news/images/program2025.jpg')] bg-cover bg-center" />
         <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center">
           <div className="inline-block p-4 bg-white/10 rounded-full mb-6 backdrop-blur-sm">
             <span className="text-secondary font-bold tracking-wider">EST. {FOUNDED}</span>
@@ -146,7 +145,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {latestNews.map((item) => (
-                <NewsCard key={item.slug} item={item} />
+                <NewsCard key={item.id} item={item} />
               ))}
             </div>
           </div>
@@ -164,9 +163,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row justify-center gap-10 mb-10">
               {leaders.map((m) => (
                 <div key={m.id} className="flex flex-col items-center text-center">
-                  <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-secondary mb-4 shadow-sm">
-                    <img src={m.photo} alt={m.name} className="w-full h-full object-cover" />
-                  </div>
+                  <Avatar src={m.photo_url} name={m.name} size={144} className="w-36 h-36 border-4 border-secondary mb-4 shadow-sm" />
                   <h3 className="text-xl font-bold text-primary">{m.name}</h3>
                   <p className="text-secondary font-medium">{m.position}</p>
                 </div>
@@ -196,7 +193,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <a
-                href="https://www.facebook.com/BMMCKP"
+                href={site.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 bg-secondary text-primary-foreground font-semibold rounded-full hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
@@ -204,13 +201,13 @@ export default function Home() {
                 <FaFacebook className="w-5 h-5" /> Follow on Facebook
               </a>
               <a
-                href="tel:+8801942357476"
+                href={site.phoneHref}
                 className="px-6 py-3 border-2 border-white/70 font-semibold rounded-full hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
               >
                 <Phone className="w-5 h-5" /> Call Us
               </a>
               <a
-                href="mailto:contact@bmmswc.org"
+                href={`mailto:${site.email}`}
                 className="px-6 py-3 border-2 border-white/70 font-semibold rounded-full hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
               >
                 <Mail className="w-5 h-5" /> Email Us

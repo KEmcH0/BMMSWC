@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaFacebook } from "react-icons/fa";
+import { site } from "@/lib/site";
+
+const quickLinks = [
+  { name: "About Us", href: "/about" },
+  { name: "Current Committee", href: "/committee" },
+  { name: "Advisors", href: "/advisors" },
+  { name: "News & Events", href: "/news" },
+  { name: "Exam Results", href: "/results" },
+  { name: "Gallery", href: "/gallery" },
+  { name: "Contact Us", href: "/contact" },
+];
 
 export default function Footer() {
   return (
@@ -16,21 +27,13 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-4 text-white">Quick Links</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="/about" className="text-white/80 hover:text-secondary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/committee" className="text-white/80 hover:text-secondary transition-colors">
-                  Current Committee
-                </Link>
-              </li>
-              <li>
-                <Link href="/news" className="text-white/80 hover:text-secondary transition-colors">
-                  News & Events
-                </Link>
-              </li>
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-white/80 hover:text-secondary transition-colors">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -38,19 +41,19 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start space-x-3 text-white/80">
                 <MapPin className="w-5 h-5 mt-0.5 text-secondary" />
-                <span>AdampurBazar, Moulvibazar</span>
+                <span>{site.address}</span>
               </li>
               <li className="flex items-center space-x-3 text-white/80">
                 <Phone className="w-5 h-5 text-secondary" />
-                <span>+880 1942357476</span>
+                <a href={site.phoneHref} className="hover:text-secondary transition-colors">{site.phone}</a>
               </li>
               <li className="flex items-center space-x-3 text-white/80">
                 <Mail className="w-5 h-5 text-secondary" />
-                <span>contact@bmmswc.org</span>
+                <a href={`mailto:${site.email}`} className="hover:text-secondary transition-colors">{site.email}</a>
               </li>
             </ul>
             <div className="flex space-x-4 mt-6">
-              <Link href="https://www.facebook.com/BMMCKP" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
+              <Link href={site.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-white/10 rounded-full hover:bg-secondary transition-colors text-white">
                 <FaFacebook className="w-5 h-5" />
               </Link>
             </div>

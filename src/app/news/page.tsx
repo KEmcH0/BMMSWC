@@ -1,13 +1,21 @@
 import type { Metadata } from "next";
 import NewsCard from "@/components/NewsCard";
-import { newsItems } from "@/lib/news";
+import { getNews } from "@/lib/db";
+import { todayInDhaka } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "News & Events | BMMSWC",
   description: "Latest news, programs and events of BMMSWC.",
 };
 
-export default function News() {
+export const dynamic = "force-dynamic";
+
+export default async function News() {
+  const newsItems = await getNews();
+  const today = todayInDhaka();
+  const upcoming = newsItems.filter((n) => n.date >= today).reverse();
+  const past = newsItems.filter((n) => n.date < today);
+
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-12">
@@ -18,11 +26,27 @@ export default function News() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {newsItems.map((item) => (
-          <NewsCard key={item.slug} item={item} />
-        ))}
-      </div>
+      {upcoming.length > 0 && (
+        <section className="mb-16">
+          <h2 className="text-2xl font-bold text-primary mb-8">Upcoming Events</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {upcoming.map((item) => (
+              <NewsCard key={item.id} item={item} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {newsItems.length === 0 && <p className="text-center opacity-70">No news yet.</p>}
+
+      <section>
+        {upcoming.length > 0 && <h2 className="text-2xl font-bold text-primary mb-8">Past News & Events</h2>}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {past.map((item) => (
+            <NewsCard key={item.id} item={item} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

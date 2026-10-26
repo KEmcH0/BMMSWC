@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Us | BMMSWC",
+  description: "History, mission and vision of the Bangladesh Manipuri Muslim Student Welfare Community.",
+};
+
 export default function About() {
   return (
     <div className="container mx-auto px-4 py-16">

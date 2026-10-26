@@ -17,7 +17,9 @@ export default function Navbar() {
     { name: "Advisors", href: "/advisors" },
     { name: "Alumni", href: "/alumni" },
     { name: "News & Events", href: "/news" },
+    { name: "Results", href: "/results" },
     { name: "Gallery", href: "/gallery" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
