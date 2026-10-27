@@ -28,6 +28,18 @@ export const developer = {
   facebook: "https://www.facebook.com/profile.php?id=100088108552227",
   linkedin: "https://www.linkedin.com/in/fahmid-hasan-tuhin-9b9a8a274/",
   instagram: "https://www.instagram.com/fahmidhasan420/",
+  // Shown on the /developer page. Edit freely; empty fields and lists are hidden.
+  role: "Web Developer",
+  bio: "I design and build websites. I built the BMMSWC website so our community can share news, publish merit test results and keep its memories in one place.",
+  skills: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "UI Design"],
+  projects: [
+    {
+      name: "BMMSWC Website",
+      description:
+        "Official website of the Bangladesh Manipuri Muslim Student Welfare Community, with an admin panel for news, exam results, committee and photo albums.",
+      href: "/",
+    },
+  ],
 };
 
 export function classLabel(key: string) {

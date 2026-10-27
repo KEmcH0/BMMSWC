@@ -6,7 +6,7 @@ import { siteUrl as base } from "@/lib/site";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pages = ["", "/about", "/committee", "/advisors", "/news", "/results", "/gallery", "/contact"];
+  const pages = ["", "/about", "/committee", "/advisors", "/news", "/results", "/gallery", "/contact", "/developer"];
   const [news, exams, albums] = await Promise.all([getNews(), getExams(), getAlbums()]);
   return [
     ...pages.map((p) => ({ url: `${base}${p}` })),
