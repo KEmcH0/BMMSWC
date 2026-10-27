@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getExamById, getResults } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, text, uploadImage, uploadPdf } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, revalidatePublicSite, text, uploadImage, uploadPdf } from "@/lib/admin";
 import { normalizeClass, parseResultsCSV } from "@/lib/csv";
 import { slugify } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
@@ -61,6 +61,7 @@ export async function saveExam(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }
 
+  revalidatePublicSite();
   if (!id) redirect(`/admin/results/${examId}`);
   revalidatePath(`/admin/results/${examId}`);
   return null;
@@ -113,6 +114,7 @@ export async function uploadResults(_prev: UploadState, formData: FormData): Pro
     }
   }
 
+  revalidatePublicSite();
   revalidatePath(`/admin/results/${exam.id}`);
   return { error: null, message: `${rows.length} results uploaded.` };
 }
@@ -124,6 +126,7 @@ export async function deleteExam(formData: FormData) {
   const { error } = await supabase().from("exams").delete().eq("id", id);
   if (error) throw new Error(error.message);
   await Promise.all(photos.map((url) => removeImage(url)));
+  revalidatePublicSite();
   redirect("/admin/results");
 }
 
@@ -186,6 +189,7 @@ export async function saveTopper(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }
 
+  revalidatePublicSite();
   revalidatePath(`/admin/results/${exam.id}`);
   return null;
 }
@@ -201,5 +205,6 @@ export async function removeTopper(formData: FormData) {
     .select("photo_url");
   if (error) throw new Error(error.message);
   await Promise.all((data ?? []).map((r) => removeImage(r.photo_url)));
+  revalidatePublicSite();
   revalidatePath(`/admin/results/${examId}`);
 }

@@ -9,7 +9,8 @@ import { formatDate } from "@/lib/format";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamic = "force-dynamic";
+// Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

@@ -1,5 +1,6 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { SESSION_COOKIE, verifySessionToken } from "./auth";
 import { MEDIA_BUCKET, supabase } from "./supabase";
@@ -9,6 +10,11 @@ import { MEDIA_BUCKET, supabase } from "./supabase";
 export async function requireAdmin() {
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!(await verifySessionToken(token))) redirect("/admin/login");
+}
+
+// Public pages are cached; call after every admin change so the website shows it immediately.
+export function revalidatePublicSite() {
+  revalidatePath("/", "layout");
 }
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"];

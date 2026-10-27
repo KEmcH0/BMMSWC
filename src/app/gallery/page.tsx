@@ -6,7 +6,8 @@ import PageHeader from "@/components/PageHeader";
 import { getAlbums } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 
-export const dynamic = "force-dynamic";
+// Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Gallery | BMMSWC",

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getAlbumById, getAlbumPhotos } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, text, uploadImage } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, revalidatePublicSite, text, uploadImage } from "@/lib/admin";
 import { slugify } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
 
@@ -46,6 +46,7 @@ export async function saveAlbum(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }
 
+  revalidatePublicSite();
   if (!id) redirect(`/admin/gallery/${albumId}`);
   revalidatePath(`/admin/gallery/${albumId}`);
   return null;
@@ -59,6 +60,7 @@ export async function deleteAlbum(formData: FormData) {
   const { error } = await supabase().from("albums").delete().eq("id", id);
   if (error) throw new Error(error.message);
   await Promise.all(photos.map((p) => removeImage(p.image_url)));
+  revalidatePublicSite();
   redirect("/admin/gallery");
 }
 
@@ -95,6 +97,7 @@ export async function uploadPhotos(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Upload failed.";
   }
 
+  revalidatePublicSite();
   revalidatePath(`/admin/gallery/${album.id}`);
   return null;
 }
@@ -107,6 +110,7 @@ export async function updateCaption(formData: FormData) {
     .update({ caption: text(formData, "caption") })
     .eq("id", text(formData, "id"));
   if (error) throw new Error(error.message);
+  revalidatePublicSite();
   revalidatePath(`/admin/gallery/${albumId}`);
 }
 
@@ -118,6 +122,7 @@ export async function setCover(formData: FormData) {
     .update({ cover_url: text(formData, "image_url") })
     .eq("id", albumId);
   if (error) throw new Error(error.message);
+  revalidatePublicSite();
   revalidatePath(`/admin/gallery/${albumId}`);
 }
 
@@ -134,5 +139,6 @@ export async function deleteGalleryItem(formData: FormData) {
     }
     await removeImage(data.image_url);
   }
+  revalidatePublicSite();
   revalidatePath(`/admin/gallery/${data?.album_id ?? ""}`);
 }

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getSetting } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, uploadImage } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, revalidatePublicSite, uploadImage } from "@/lib/admin";
 import { supabase } from "@/lib/supabase";
 
 async function setHero(value: string) {
@@ -15,7 +15,7 @@ async function setHero(value: string) {
       : error.message;
   }
   await removeImage(old);
-  revalidatePath("/");
+  revalidatePublicSite();
   revalidatePath("/admin/homepage");
   return null;
 }

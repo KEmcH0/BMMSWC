@@ -7,20 +7,16 @@ import PhotoGallery from "@/components/PhotoGallery";
 import { getAlbumBySlug, getAlbumPhotos, getNews } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 
-export const dynamic = "force-dynamic";
+// Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
+export const revalidate = 3600;
 
-type Props = {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ photo?: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const album = await getAlbumBySlug((await params).slug);
   if (!album) return {};
   const photos = await getAlbumPhotos(album.id);
-  // A shared single-photo link previews that photo; otherwise the album cover.
-  const photoId = (await searchParams).photo;
-  const image = photos.find((p) => p.id === photoId)?.image_url || album.cover_url || photos[0]?.image_url;
+  const image = album.cover_url || photos[0]?.image_url;
   const description = album.description || `${photos.length} photos from ${album.title}.`;
   return {
     title: `${album.title} | BMMSWC Gallery`,
@@ -29,7 +25,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   };
 }
 
-export default async function AlbumPage({ params, searchParams }: Props) {
+export default async function AlbumPage({ params }: Props) {
   const album = await getAlbumBySlug((await params).slug);
   if (!album) notFound();
   const [photos, news] = await Promise.all([
@@ -67,7 +63,6 @@ export default async function AlbumPage({ params, searchParams }: Props) {
         ) : (
           <PhotoGallery
             title={album.title}
-            initialPhotoId={(await searchParams).photo}
             photos={photos.map((p) => ({ id: p.id, url: p.image_url, caption: p.caption, width: p.width, height: p.height }))}
           />
         )}

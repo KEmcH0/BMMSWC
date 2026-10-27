@@ -161,19 +161,15 @@ function Lightbox({
 }
 
 // Masonry grid: every photo keeps its own shape, nothing is cropped.
-export default function PhotoGallery({
-  photos,
-  title,
-  initialPhotoId,
-}: {
-  photos: Photo[];
-  title: string;
-  initialPhotoId?: string;
-}) {
-  const [open, setOpen] = useState<number | null>(() => {
-    const i = photos.findIndex((p) => p.id === initialPhotoId);
-    return i >= 0 ? i : null;
-  });
+export default function PhotoGallery({ photos, title }: { photos: Photo[]; title: string }) {
+  const [open, setOpen] = useState<number | null>(null);
+
+  // A shared link (?photo=<id>) opens that photo. Read in the browser so the page itself can be cached.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("photo");
+    const i = photos.findIndex((p) => p.id === id);
+    if (i >= 0) setOpen(i);
+  }, [photos]);
 
   const show = useCallback(
     (i: number | null) => {

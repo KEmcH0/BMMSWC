@@ -5,7 +5,8 @@ import { getExams } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import PageHeader from "@/components/PageHeader";
 
-export const dynamic = "force-dynamic";
+// Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Exam Results | BMMSWC",

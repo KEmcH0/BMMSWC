@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getNewsById } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, text, uploadImage } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, revalidatePublicSite, text, uploadImage } from "@/lib/admin";
 import { slugify } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
 
@@ -48,6 +48,7 @@ export async function saveNews(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }
 
+  revalidatePublicSite();
   redirect("/admin/news");
 }
 
@@ -59,5 +60,6 @@ export async function deleteNews(formData: FormData) {
     if (error) throw new Error(error.message);
     await removeImage(item.image_url);
   }
+  revalidatePublicSite();
   redirect("/admin/news");
 }

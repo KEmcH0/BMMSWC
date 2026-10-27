@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getPerson } from "@/lib/db";
-import { isUpload, removeImage, requireAdmin, text, uploadImage } from "@/lib/admin";
+import { isUpload, removeImage, requireAdmin, revalidatePublicSite, text, uploadImage } from "@/lib/admin";
 import { supabase } from "@/lib/supabase";
 import { PEOPLE_CONFIG, isPersonKind } from "./config";
 
@@ -43,6 +43,7 @@ export async function savePerson(_prev: string | null, formData: FormData) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }
 
+  revalidatePublicSite();
   redirect(PEOPLE_CONFIG[kind].listPath);
 }
 
@@ -54,5 +55,6 @@ export async function deletePerson(formData: FormData) {
   const { error } = await supabase().from("people").delete().eq("id", person.id);
   if (error) throw new Error(error.message);
   await removeImage(person.photo_url);
+  revalidatePublicSite();
   redirect(PEOPLE_CONFIG[person.kind].listPath);
 }

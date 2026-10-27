@@ -50,7 +50,8 @@ const highlights = [
 
 const leaderPositions = ["President", "General Secretary"];
 
-export const dynamic = "force-dynamic";
+// Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
+export const revalidate = 3600;
 
 // Used until a homepage image is uploaded from the admin.
 const DEFAULT_HERO = "/news/images/program2025.jpg";
