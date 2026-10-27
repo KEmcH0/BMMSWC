@@ -10,6 +10,11 @@ import { formatDate } from "@/lib/format";
 // Served from cache; admin changes refresh it right away (revalidatePublicSite), this is only a safety net.
 export const revalidate = 3600;
 
+// Each page is built on its first visit and then cached (nothing is pre-built at deploy time).
+export async function generateStaticParams() {
+  return [];
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
