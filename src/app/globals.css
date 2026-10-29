@@ -63,24 +63,14 @@
   }
 }
 
-/* Thin gold rule used under eyebrow labels. */
+/* Small gold label above section titles. */
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
+  display: block;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--secondary);
-}
-
-.eyebrow::before {
-  content: "";
-  width: 1.75rem;
-  height: 2px;
-  background: currentColor;
-  border-radius: 2px;
 }
 
 /* Subtle diagonal pattern for navy bands. */
