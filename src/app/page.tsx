@@ -12,11 +12,12 @@ import {
 } from "lucide-react";
 import { FaFacebookF } from "react-icons/fa";
 
+import HomeAchieversSection from "./HomeAchieversSection";
 import HomeGallerySection from "./HomeGallerySection";
 import Avatar from "@/components/Avatar";
 import NewsCard from "@/components/NewsCard";
 import SectionHeading from "@/components/SectionHeading";
-import { countAwardees, countPeople, getAlbums, getGallery, getNews, getPeople, getSetting } from "@/lib/db";
+import { countAwardees, countPeople, getAchievers, getAlbums, getGallery, getNews, getPeople, getSetting } from "@/lib/db";
 import { site } from "@/lib/site";
 
 const programs = [
@@ -57,7 +58,7 @@ export const revalidate = 3600;
 const DEFAULT_HERO = "/news/images/program2025.jpg";
 
 export default async function Home() {
-  const [committee, advisorCount, latestNews, gallery, albums, awardees, heroImage] = await Promise.all([
+  const [committee, advisorCount, latestNews, gallery, albums, awardees, heroImage, achievers] = await Promise.all([
     getPeople("committee"),
     countPeople("advisor"),
     getNews({ limit: 3 }),
@@ -65,6 +66,7 @@ export default async function Home() {
     getAlbums(),
     countAwardees(),
     getSetting("hero_image"),
+    getAchievers(),
   ]);
   // Each photo opens straight in its album's lightbox.
   const albumSlug = new Map(albums.map((a) => [a.id, a.slug]));
@@ -203,6 +205,8 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      <HomeAchieversSection achievers={achievers} />
 
       {/* Latest news */}
       {latestNews.length > 0 && (
