@@ -72,6 +72,23 @@ export type ExamResult = {
   photo_url: string;
 };
 
+export type AchieverCategory = "medical" | "engineering" | "university";
+
+export type Achiever = {
+  id: string;
+  name: string;
+  photo_url: string;
+  category: AchieverCategory;
+  institution: string;
+  subject: string;
+  session: string;
+  admission_year: number | null;
+  village: string;
+  phone: string;
+  email: string;
+  facebook: string;
+};
+
 function check<T>(res: { data: T | null; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);
   return res.data as T;
@@ -209,6 +226,23 @@ export async function countAwardees() {
     .eq("exams.published", true);
   if (error) throw new Error(error.message);
   return count ?? 0;
+}
+
+// Achievers ------------------------------------------------------------
+
+// Newest admissions first. Returns [] if the achievers table has not been created yet, so the site still builds.
+export async function getAchievers() {
+  const { data, error } = await supabase()
+    .from("achievers")
+    .select("*")
+    .order("admission_year", { ascending: false, nullsFirst: false })
+    .order("name");
+  if (error) console.error("achievers:", error.message);
+  return (data ?? []) as Achiever[];
+}
+
+export async function getAchiever(id: string) {
+  return check<Achiever | null>(await supabase().from("achievers").select("*").eq("id", id).maybeSingle());
 }
 
 // Settings ---------------------------------------------------------------

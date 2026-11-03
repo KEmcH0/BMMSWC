@@ -122,6 +122,17 @@ export function classLabel(key: string) {
   return site.resultClasses.find((c) => c.key === key)?.label ?? `Class ${key}`;
 }
 
+// Kinds of admission shown on the Achievers page, in display order.
+export const achieverCategories = [
+  { key: "medical", label: "Medical" },
+  { key: "engineering", label: "Engineering" },
+  { key: "university", label: "University" },
+] as const;
+
+export function categoryLabel(key: string) {
+  return achieverCategories.find((c) => c.key === key)?.label ?? key;
+}
+
 export const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
