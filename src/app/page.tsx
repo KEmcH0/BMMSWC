@@ -62,7 +62,7 @@ export default async function Home() {
     getPeople("committee"),
     countPeople("advisor"),
     getNews({ limit: 3 }),
-    getGallery(5),
+    getGallery(40), // the homepage mosaic cycles through these
     getAlbums(),
     countAwardees(),
     getSetting("hero_image"),
