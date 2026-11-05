@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Check, ChevronLeft, ChevronRight, Download, Share2, X } from "lucide-react";
+import { dict, digits, type Lang } from "@/lib/i18n";
 
 export type Photo = { id: string; url: string; caption: string; width: number | null; height: number | null };
 
@@ -23,16 +24,19 @@ function Lightbox({
   photos,
   index,
   title,
+  lang,
   onChange,
   onClose,
 }: {
   photos: Photo[];
   index: number;
   title: string;
+  lang: Lang;
   onChange: (i: number) => void;
   onClose: () => void;
 }) {
   const photo = photos[index];
+  const t = dict[lang].gallery;
   const [copied, setCopied] = useState(false);
   const touchX = useRef<number | null>(null);
   const thumbs = useRef<HTMLDivElement>(null);
@@ -82,21 +86,21 @@ function Lightbox({
       {/* Top bar */}
       <div className="flex items-center justify-between gap-3 p-3 md:p-4 text-white">
         <p className="text-sm font-medium tabular-nums px-2">
-          {index + 1} / {photos.length}
+          {digits(index + 1, lang)} / {digits(photos.length, lang)}
         </p>
         <div className="flex items-center gap-2">
-          <button type="button" onClick={share} className={button} aria-label="Share photo">
+          <button type="button" onClick={share} className={button} aria-label={t.share}>
             {copied ? <Check className="w-5 h-5" /> : <Share2 className="w-5 h-5" />}
           </button>
-          <a href={downloadUrl(photo.url)} download className={button} aria-label="Download photo">
+          <a href={downloadUrl(photo.url)} download className={button} aria-label={t.download}>
             <Download className="w-5 h-5" />
           </a>
-          <button type="button" onClick={onClose} className={button} aria-label="Close">
+          <button type="button" onClick={onClose} className={button} aria-label={t.close}>
             <X className="w-5 h-5" />
           </button>
         </div>
       </div>
-      {copied && <p className="text-center text-xs text-white/70 -mt-2">Link copied</p>}
+      {copied && <p className="text-center text-xs text-white/70 -mt-2">{t.copied}</p>}
 
       {/* Photo; swipe left/right on phones */}
       <div
@@ -124,12 +128,12 @@ function Lightbox({
       </div>
 
       {index > 0 && (
-        <button type="button" onClick={prev} className={`${button} hidden md:block absolute left-4 top-1/2 -translate-y-1/2`} aria-label="Previous photo">
+        <button type="button" onClick={prev} className={`${button} hidden md:block absolute left-4 top-1/2 -translate-y-1/2`} aria-label={t.previous}>
           <ChevronLeft className="w-6 h-6" />
         </button>
       )}
       {index < photos.length - 1 && (
-        <button type="button" onClick={next} className={`${button} hidden md:block absolute right-4 top-1/2 -translate-y-1/2`} aria-label="Next photo">
+        <button type="button" onClick={next} className={`${button} hidden md:block absolute right-4 top-1/2 -translate-y-1/2`} aria-label={t.next}>
           <ChevronRight className="w-6 h-6" />
         </button>
       )}
@@ -148,7 +152,7 @@ function Lightbox({
                 className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-md transition-all ${
                   i === index ? "ring-2 ring-secondary opacity-100" : "opacity-50 hover:opacity-80"
                 }`}
-                aria-label={`Photo ${i + 1}`}
+                aria-label={t.photoNumber(i + 1)}
               >
                 <Image src={p.url} alt="" fill sizes="56px" className="object-cover" />
               </button>
@@ -161,7 +165,8 @@ function Lightbox({
 }
 
 // Masonry grid: every photo keeps its own shape, nothing is cropped.
-export default function PhotoGallery({ photos, title }: { photos: Photo[]; title: string }) {
+export default function PhotoGallery({ photos, title, lang }: { photos: Photo[]; title: string; lang: Lang }) {
+  const t = dict[lang].gallery;
   const [open, setOpen] = useState<number | null>(null);
 
   // A shared link (?photo=<id>) opens that photo. Read in the browser so the page itself can be cached.
@@ -190,11 +195,11 @@ export default function PhotoGallery({ photos, title }: { photos: Photo[]; title
             onClick={() => show(i)}
             className="group relative mb-3 md:mb-4 block w-full break-inside-avoid overflow-hidden rounded-xl bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
             style={{ aspectRatio: p.width && p.height ? `${p.width} / ${p.height}` : undefined }}
-            aria-label={p.caption || `Open photo ${i + 1}`}
+            aria-label={p.caption || t.openPhoto(i + 1)}
           >
             <Image
               src={p.url}
-              alt={p.caption || `${title} photo ${i + 1}`}
+              alt={p.caption || t.photoAlt(title, i + 1)}
               width={p.width ?? 1200}
               height={p.height ?? 900}
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
@@ -211,7 +216,7 @@ export default function PhotoGallery({ photos, title }: { photos: Photo[]; title
       </div>
 
       {open !== null && photos[open] && (
-        <Lightbox photos={photos} index={open} title={title} onChange={show} onClose={close} />
+        <Lightbox photos={photos} index={open} title={title} lang={lang} onChange={show} onClose={close} />
       )}
     </>
   );

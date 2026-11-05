@@ -1,5 +1,7 @@
-export function formatDate(date: string) {
-  return new Date(date + "T00:00:00").toLocaleDateString("en-US", {
+import type { Lang } from "./i18n";
+
+export function formatDate(date: string, lang: Lang = "en") {
+  return new Date(date + "T00:00:00").toLocaleDateString(lang === "bn" ? "bn-BD" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",

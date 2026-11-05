@@ -2,41 +2,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { dict, digits, localePath, type Lang } from "@/lib/i18n";
 import { developer, site } from "@/lib/site";
 
-const columns = [
-  {
-    title: "Organization",
-    links: [
-      { name: "About Us", href: "/about" },
-      { name: "Executive Committee", href: "/committee" },
-      { name: "Advisors", href: "/advisors" },
-    ],
-  },
-  {
-    title: "Activities",
-    links: [
-      { name: "News & Events", href: "/news" },
-      { name: "Exam Results", href: "/results" },
-      { name: "Photo Gallery", href: "/gallery" },
-      { name: "Contact Us", href: "/contact" },
-    ],
-  },
-];
+export default function Footer({ lang }: { lang: Lang }) {
+  const t = dict[lang].footer;
+  const columns = [
+    {
+      title: t.organization,
+      links: [
+        { name: t.about, href: "/about" },
+        { name: t.committee, href: "/committee" },
+        { name: t.advisors, href: "/advisors" },
+      ],
+    },
+    {
+      title: t.activities,
+      links: [
+        { name: t.news, href: "/news" },
+        { name: t.results, href: "/results" },
+        { name: t.gallery, href: "/gallery" },
+        { name: t.contact, href: "/contact" },
+      ],
+    },
+  ];
 
-export default function Footer() {
   return (
     <footer className="relative bg-primary-dark text-white mt-auto overflow-hidden">
       <div className="absolute inset-0 pattern-grid opacity-60" aria-hidden />
       <div className="container relative mx-auto px-4 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10">
           <div>
-            <Link href="/" className="flex items-center gap-3 mb-5">
+            <Link href={localePath(lang, "/")} className="flex items-center gap-3 mb-5">
               <Image src="/logo.png" alt="" width={48} height={48} className="rounded-full bg-white p-0.5" />
               <span className="font-display text-2xl font-semibold">{site.name}</span>
             </Link>
             <p className="text-white/65 leading-relaxed max-w-sm">
-              {site.fullName}. Working for the educational and social welfare of the community since {site.founded}.
+              {t.blurb(digits(site.founded, lang))}
             </p>
             <a
               href={site.facebook}
@@ -55,7 +57,7 @@ export default function Footer() {
               <ul className="space-y-3">
                 {col.links.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-white/70 hover:text-white transition-colors">
+                    <Link href={localePath(lang, link.href)} className="text-white/70 hover:text-white transition-colors">
                       {link.name}
                     </Link>
                   </li>
@@ -65,11 +67,11 @@ export default function Footer() {
           ))}
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-secondary mb-5">Get in Touch</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-secondary mb-5">{t.getInTouch}</h3>
             <ul className="space-y-4 text-white/70">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 mt-0.5 shrink-0 text-secondary" />
-                <span>{site.address}</span>
+                <span>{dict[lang].address}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 shrink-0 text-secondary" />
@@ -86,9 +88,9 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm text-white/50">
-          <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
+          <p>&copy; {digits(new Date().getFullYear(), lang)} {site.name}. {t.rights}</p>
           <div className="flex items-center gap-3">
-            <Link href="/developer" className="group flex items-center gap-3 hover:text-white transition-colors">
+            <Link href={localePath(lang, "/developer")} className="group flex items-center gap-3 hover:text-white transition-colors">
               {developer.photo && (
                 <Image
                   src={developer.photo}
@@ -99,7 +101,7 @@ export default function Footer() {
                 />
               )}
               <span>
-                Designed &amp; developed by{" "}
+                {t.designedBy}{" "}
                 <span className="font-semibold text-white/80 underline-offset-4 group-hover:underline group-hover:text-secondary">
                   {developer.name}
                 </span>
@@ -117,7 +119,7 @@ export default function Footer() {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${developer.name} on ${label}`}
+                  aria-label={t.onSocial(developer.name, label)}
                   className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-secondary hover:text-primary-dark transition-colors"
                 >
                   <Icon className="h-3.5 w-3.5" />

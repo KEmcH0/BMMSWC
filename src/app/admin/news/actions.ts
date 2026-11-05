@@ -28,6 +28,8 @@ export async function saveNews(_prev: string | null, formData: FormData) {
     published: formData.get("published") === "on",
   };
   if (!title || !date) return "Title and date are required.";
+  const title_bn = text(formData, "title_bn");
+  const body_bn = text(formData, "body_bn");
 
   try {
     const existing = id ? await getNewsById(id) : null;
@@ -35,15 +37,20 @@ export async function saveNews(_prev: string | null, formData: FormData) {
 
     let image_url = existing?.image_url ?? "";
     const image = formData.get("image");
-    if (isUpload(image)) {
-      image_url = await uploadImage(image, "news");
-      await removeImage(existing?.image_url);
-    }
+    if (isUpload(image)) image_url = await uploadImage(image, "news");
 
+    // Left out when there is no Bangla text, so posts can still be saved before migration 008 has been run.
+    const bangla = title_bn || body_bn || existing?.title_bn || existing?.body_bn ? { title_bn, body_bn } : {};
     const res = existing
-      ? await supabase().from("news").update({ ...fields, image_url }).eq("id", existing.id)
-      : await supabase().from("news").insert({ ...fields, image_url, slug: await uniqueSlug(title, date) });
-    if (res.error) return res.error.message;
+      ? await supabase().from("news").update({ ...fields, ...bangla, image_url }).eq("id", existing.id)
+      : await supabase().from("news").insert({ ...fields, ...bangla, image_url, slug: await uniqueSlug(title, date) });
+    if (res.error) {
+      if (image_url !== existing?.image_url) await removeImage(image_url);
+      return res.error.code === "PGRST204"
+        ? "Bangla text can't be saved yet. Run supabase/migrations/008_news_bangla.sql in Supabase → SQL Editor."
+        : res.error.message;
+    }
+    if (existing && image_url !== existing.image_url) await removeImage(existing.image_url);
   } catch (e) {
     return e instanceof Error ? e.message : "Something went wrong.";
   }

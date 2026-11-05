@@ -36,6 +36,17 @@ export default function NewsForm({ item }: { item?: NewsItem }) {
         <textarea name="body" rows={10} defaultValue={item?.body} className={inputClass} />
       </Field>
 
+      <fieldset className="border-t pt-5 space-y-5">
+        <legend className="pr-3 text-sm font-semibold">Bangla (optional)</legend>
+        <p className="text-sm text-muted-foreground">Left empty, the Bangla website shows the English text above.</p>
+        <Field label="বাংলা শিরোনাম">
+          <input name="title_bn" lang="bn" defaultValue={item?.title_bn} className={inputClass} />
+        </Field>
+        <Field label="বাংলা বিবরণ">
+          <textarea name="body_bn" lang="bn" rows={10} defaultValue={item?.body_bn} className={inputClass} />
+        </Field>
+      </fieldset>
+
       <ImageInput name="image" current={item?.image_url} label="Cover photo" />
 
       <label className="flex items-center gap-2">

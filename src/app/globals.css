@@ -73,6 +73,19 @@
   color: var(--secondary);
 }
 
+/* Bangla pages: spaced-out letters break up joined Bangla characters, and tight lines clip their upper and lower marks. */
+html:lang(bn) * {
+  letter-spacing: 0 !important;
+}
+
+html:lang(bn) .eyebrow {
+  font-size: 0.875rem;
+}
+
+html:lang(bn) :is(h1, h2, h3) {
+  line-height: 1.35;
+}
+
 /* Subtle diagonal pattern for navy bands. */
 .pattern-grid {
   background-image:

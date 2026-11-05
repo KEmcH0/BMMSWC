@@ -27,6 +27,8 @@ create table if not exists news (
   date date not null,
   category text not null default 'News',
   body text not null default '',
+  title_bn text not null default '',
+  body_bn text not null default '',
   image_url text not null default '',
   published boolean not null default true,
   created_at timestamptz not null default now()

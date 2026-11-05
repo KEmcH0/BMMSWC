@@ -34,7 +34,7 @@ Open http://localhost:3000, and http://localhost:3000/admin for the admin panel.
 
 ## Admin panel (`/admin`)
 
-- **News & Events**: add, edit, delete and save as draft. A future date shows under "Upcoming Events".
+- **News & Events**: add, edit, delete and save as draft. A future date shows under "Upcoming Events". Each post can also have a Bangla title and details (run [`supabase/migrations/008_news_bangla.sql`](supabase/migrations/008_news_bangla.sql) once on an existing database); without them, the Bangla website shows the English text.
 - **Exam Results**: create an exam, upload a CSV (template: `/results-template.csv`), then tick "Published". Students search by roll at `/results`.
 - **Committee / Advisors / Alumni**: add, edit, remove and set the display order.
 - **Gallery**: upload up to 10 photos at a time, or delete them.
@@ -45,6 +45,7 @@ Photos are resized in the browser before upload, so photos straight from a phone
 ## Where things live
 
 - `src/lib/site.ts`: contact details, founding year, committee session
+- `src/lib/i18n.ts`: all fixed website text in English and Bangla. English pages are at `/about`, Bangla pages at `/bn/about`; text typed into the admin is shown as typed.
 - `src/lib/db.ts`: all database reads
 - `src/app/admin/**/actions.ts`: all database writes (each one checks the admin login)
 - `supabase/`: database schema and initial data

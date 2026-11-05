@@ -109,6 +109,7 @@ export default async function AdminPage() {
               keep the file safe.
             </p>
             {/* A plain link: the backup is a file download, not a page. */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a
               href="/admin/backup"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold hover:bg-primary/90"

@@ -20,6 +20,8 @@ export type NewsItem = {
   date: string; // YYYY-MM-DD
   category: string;
   body: string;
+  title_bn?: string; // missing until migration 008 has been run
+  body_bn?: string;
   image_url: string;
   published: boolean;
 };
