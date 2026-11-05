@@ -2,6 +2,7 @@
 export const site = {
   name: "BMMSWC",
   fullName: "Bangladesh Manipuri Muslim Student Welfare Community",
+  fullNameBn: "বাংলাদেশ মণিপুরী মুসলিম ছাত্র কল্যাণ পরিষদ",
   founded: 1985,
   committeeSession: "2025–26",
   // Result sections, each with its own top 3. Class 12 is split by group.

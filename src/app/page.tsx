@@ -96,6 +96,9 @@ export default async function Home() {
         <div className="absolute inset-0 bg-gradient-to-t from-primary-dark/60 via-transparent to-transparent" />
         <div className="container relative mx-auto px-4 py-24">
           <div className="max-w-2xl">
+            <p lang="bn" className="mb-3 text-base sm:text-lg font-medium text-white/90">
+              {site.fullNameBn}
+            </p>
             <p className="eyebrow mb-6">Since {site.founded} · Moulvibazar, Bangladesh</p>
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1]">
               Empowering students.
