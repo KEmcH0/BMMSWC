@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { GraduationCap, Mail, MapPin, Phone } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, GraduationCap, Mail, MapPin, Phone } from "lucide-react";
 import { FaFacebookF } from "react-icons/fa";
 import Avatar from "@/components/Avatar";
 import PageHeader from "@/components/PageHeader";
@@ -73,7 +74,14 @@ export default function AchieversView({ achievers }: { achievers: Achiever[] }) 
         eyebrow="Higher Education"
         title="Our Achievers"
         description="Students from our community who earned a place at universities, medical and engineering colleges."
-      />
+      >
+        <Link
+          href="/achievers/submit"
+          className="mt-8 inline-flex items-center gap-2 px-6 py-3 rounded-full bg-secondary text-primary-dark font-semibold hover:brightness-110 transition"
+        >
+          Got admission? Add your name <ArrowRight className="w-4 h-4" />
+        </Link>
+      </PageHeader>
       <div className="container mx-auto px-4 py-16">
         {achievers.length === 0 ? (
           <div className="text-center text-muted-foreground">

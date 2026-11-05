@@ -7,12 +7,17 @@ import type { Achiever } from "@/lib/db";
 import { achieverCategories } from "@/lib/site";
 import { saveAchiever } from "./actions";
 
-export default function AchieverForm({ achiever }: { achiever?: Achiever }) {
+// With submissionId, the form is a student's: saving publishes it as a new achiever and clears it from the waiting list.
+export default function AchieverForm({ achiever, submissionId }: { achiever?: Achiever; submissionId?: string }) {
   const [error, action] = useActionState(saveAchiever, null);
 
   return (
     <form action={action} className="bg-card border rounded-lg p-6 space-y-5 max-w-3xl">
-      {achiever && <input type="hidden" name="id" value={achiever.id} />}
+      {submissionId ? (
+        <input type="hidden" name="submission_id" value={submissionId} />
+      ) : (
+        achiever && <input type="hidden" name="id" value={achiever.id} />
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <Field label="Name">
@@ -72,7 +77,7 @@ export default function AchieverForm({ achiever }: { achiever?: Achiever }) {
       <ImageInput name="photo" current={achiever?.photo_url} />
 
       <FormError error={error} />
-      <SubmitButton>{achiever ? "Save changes" : "Add student"}</SubmitButton>
+      <SubmitButton>{submissionId ? "Approve and publish" : achiever ? "Save changes" : "Add student"}</SubmitButton>
     </form>
   );
 }

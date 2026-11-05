@@ -23,7 +23,7 @@ export function Field({ label, hint, children }: { label: string; hint?: string;
     <label className="block">
       <span className="block text-sm font-medium mb-2">{label}</span>
       {children}
-      {hint && <span className="block text-xs opacity-60 mt-1">{hint}</span>}
+      {hint && <span className="block text-xs text-muted-foreground mt-1">{hint}</span>}
     </label>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 const MAX_SIDE = 1600;
 
 // Shrinks a photo in the browser before upload, so phone photos (3–8 MB) become ~300 KB JPEGs.
 async function resize(file: File): Promise<File> {
   if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
-  const bitmap = await createImageBitmap(file);
+  // A file the browser can't read (e.g. HEIC on a computer) is sent as it is; the server decides whether to accept it.
+  const bitmap = await createImageBitmap(file).catch(() => null);
+  if (!bitmap) return file;
   const scale = Math.min(1, MAX_SIDE / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(bitmap.width * scale);
@@ -32,6 +34,7 @@ export default function ImageInput({
   const [previews, setPreviews] = useState<string[]>(current ? [current] : []);
   const [sizes, setSizes] = useState("");
   const [busy, setBusy] = useState(false);
+  const id = useId();
 
   async function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const input = e.currentTarget;
@@ -61,7 +64,7 @@ export default function ImageInput({
 
   return (
     <div>
-      <label className="block text-sm font-medium mb-2">{label}</label>
+      <label htmlFor={id} className="block text-sm font-medium mb-2">{label}</label>
       {previews.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-3">
           {previews.map((src) => (
@@ -72,6 +75,7 @@ export default function ImageInput({
       )}
       <input type="hidden" name={`${name}_sizes`} value={sizes} />
       <input
+        id={id}
         type="file"
         name={name}
         accept="image/*"

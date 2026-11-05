@@ -107,6 +107,26 @@ create table if not exists achievers (
 );
 create index if not exists achievers_year on achievers (admission_year desc);
 
+-- Forms students send from the public "Add your name" page. Nothing here is shown on the website: approving a form
+-- moves it to achievers, rejecting deletes it.
+create table if not exists achiever_submissions (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  photo_url text not null,
+  category text not null check (category in ('university', 'medical', 'engineering')),
+  institution text not null,
+  subject text not null,
+  session text not null,
+  admission_year int not null,
+  village text not null,
+  phone text not null default '',
+  email text not null default '',
+  facebook text not null default '',
+  sender_hash text not null default '',  -- hashed IP address, only used to limit repeat forms
+  created_at timestamptz not null default now()
+);
+create index if not exists achiever_submissions_sender on achiever_submissions (sender_hash, created_at);
+
 alter table people enable row level security;
 alter table news enable row level security;
 alter table albums enable row level security;
@@ -115,6 +135,7 @@ alter table exams enable row level security;
 alter table exam_results enable row level security;
 alter table settings enable row level security;
 alter table achievers enable row level security;
+alter table achiever_submissions enable row level security;
 
 -- Public bucket for uploaded photos (anyone can view, only the server can upload).
 insert into storage.buckets (id, name, public)

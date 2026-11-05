@@ -89,6 +89,8 @@ export type Achiever = {
   facebook: string;
 };
 
+export type AchieverSubmission = Achiever & { created_at: string };
+
 function check<T>(res: { data: T | null; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);
   return res.data as T;
@@ -243,6 +245,27 @@ export async function getAchievers() {
 
 export async function getAchiever(id: string) {
   return check<Achiever | null>(await supabase().from("achievers").select("*").eq("id", id).maybeSingle());
+}
+
+// Achiever submissions ---------------------------------------------------
+
+const SUBMISSION_COLUMNS =
+  "id, name, photo_url, category, institution, subject, session, admission_year, village, phone, email, facebook, created_at";
+
+// Forms from the public page waiting for approval, oldest first. Returns null if the table has not been created yet, so the admin can say so.
+export async function getAchieverSubmissions() {
+  const { data, error } = await supabase().from("achiever_submissions").select(SUBMISSION_COLUMNS).order("created_at");
+  if (error) {
+    console.error("achiever_submissions:", error.message);
+    return null;
+  }
+  return data as unknown as AchieverSubmission[];
+}
+
+export async function getAchieverSubmission(id: string) {
+  return check<AchieverSubmission | null>(
+    await supabase().from("achiever_submissions").select(SUBMISSION_COLUMNS).eq("id", id).maybeSingle()
+  );
 }
 
 // Settings ---------------------------------------------------------------

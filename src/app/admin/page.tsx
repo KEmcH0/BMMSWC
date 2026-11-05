@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Award, BookOpenCheck, Download, ExternalLink, GraduationCap, House, Images, LogOut, Newspaper, Plus, UserRound, Users } from "lucide-react";
-import { countPeople, getAchievers, getAlbums, getExams, getNews } from "@/lib/db";
+import { countPeople, getAchieverSubmissions, getAchievers, getAlbums, getExams, getNews } from "@/lib/db";
 import { formatDate } from "@/lib/format";
 import { logout } from "./actions";
 
 export default async function AdminPage() {
-  const [committee, advisors, alumni, news, exams, albums, achievers] = await Promise.all([
+  const [committee, advisors, alumni, news, exams, albums, achievers, submissions] = await Promise.all([
     countPeople("committee"),
     countPeople("advisor"),
     countPeople("alumni"),
@@ -13,14 +13,16 @@ export default async function AdminPage() {
     getExams({ includeDrafts: true }),
     getAlbums({ includeEmpty: true }),
     getAchievers(),
+    getAchieverSubmissions(),
   ]);
   const photos = albums.reduce((n, a) => n + a.photo_count, 0);
+  const waiting = submissions?.length ?? 0;
 
   const sections = [
     { title: "News & Events", href: "/admin/news", icon: Newspaper, count: `${news.length} posts`, add: "/admin/news/new" },
     { title: "Exam Results", href: "/admin/results", icon: Award, count: `${exams.length} exams`, add: "/admin/results/new" },
     { title: "Gallery", href: "/admin/gallery", icon: Images, count: `${albums.length} albums · ${photos} photos`, add: "/admin/gallery/new" },
-    { title: "Achievers", href: "/admin/achievers", icon: BookOpenCheck, count: `${achievers.length} students`, add: "/admin/achievers/new" },
+    { title: "Achievers", href: "/admin/achievers", icon: BookOpenCheck, count: `${achievers.length} students`, add: "/admin/achievers/new", note: waiting ? `${waiting} waiting for approval` : undefined },
     { title: "Committee", href: "/admin/committee", icon: Users, count: `${committee} members` },
     { title: "Advisors", href: "/admin/advisors", icon: UserRound, count: `${advisors} advisors` },
     { title: "Alumni", href: "/admin/alumni", icon: GraduationCap, count: `${alumni} alumni`, note: "Hidden from the menu for now" },

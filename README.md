@@ -38,6 +38,7 @@ Open http://localhost:3000, and http://localhost:3000/admin for the admin panel.
 - **Exam Results**: create an exam, upload a CSV (template: `/results-template.csv`), then tick "Published". Students search by roll at `/results`.
 - **Committee / Advisors / Alumni**: add, edit, remove and set the display order.
 - **Gallery**: upload up to 10 photos at a time, or delete them.
+- **Achievers**: add, edit and remove students. Students can also send their own details from `/achievers/submit`; each form waits on this page until you approve or reject it. On an existing database, run [`supabase/migrations/007_achiever_submissions.sql`](supabase/migrations/007_achiever_submissions.sql) once to switch this on.
 
 Photos are resized in the browser before upload, so photos straight from a phone are fine.
 

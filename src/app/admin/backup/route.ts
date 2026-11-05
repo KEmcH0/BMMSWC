@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const TABLES = ["people", "news", "albums", "gallery", "exams", "exam_results", "settings", "achievers"];
+const TABLES = ["people", "news", "albums", "gallery", "exams", "exam_results", "settings", "achievers", "achiever_submissions"];
 
 // Downloads every table as one JSON file. Photos themselves stay in Supabase Storage; only their links are saved.
 export async function GET() {

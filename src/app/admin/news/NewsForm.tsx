@@ -32,7 +32,7 @@ export default function NewsForm({ item }: { item?: NewsItem }) {
         </Field>
       </div>
 
-      <Field label="Details" hint="Leave an empty line between paragraphs.">
+      <Field label="Details" hint="Leave an empty line between paragraphs. Links starting with https:// become clickable.">
         <textarea name="body" rows={10} defaultValue={item?.body} className={inputClass} />
       </Field>
 

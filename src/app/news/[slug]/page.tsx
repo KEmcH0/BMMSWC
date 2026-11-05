@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, Calendar, Images } from "lucide-react";
+import LinkedText from "@/components/LinkedText";
 import NewsCard from "@/components/NewsCard";
 import { getAlbumForNews, getAlbumPhotos, getNews, getNewsBySlug } from "@/lib/db";
 import { formatDate } from "@/lib/format";
@@ -67,7 +68,7 @@ export default async function NewsDetail({ params }: Props) {
 
         <div className="space-y-4 text-lg leading-relaxed opacity-90">
           {item.body.split(/\n\s*\n/).map((para, i) => (
-            <p key={i} className="whitespace-pre-line">{para}</p>
+            <p key={i} className="whitespace-pre-line"><LinkedText text={para} /></p>
           ))}
         </div>
 
